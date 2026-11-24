@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250" font-family="system-ui, sans-serif" font-size="14" fill="none" stroke="#87867F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9" stroke="#87867F" stroke-width="2" fill="none"/></marker></defs>
+  <text x="20" y="25" fill="#87867F" stroke="none" font-family="ui-monospace, monospace" font-size="12">INGEST TIME</text>
+  <rect x="20" y="40" width="150" height="50" rx="10" fill="#FFFFFF"/><text x="95" y="70" text-anchor="middle" fill="#141413" stroke="none">Documents</text>
+  <rect x="230" y="40" width="170" height="50" rx="10" fill="#E3DACC"/><text x="315" y="70" text-anchor="middle" fill="#141413" stroke="none">Chunks + embeddings</text>
+  <rect x="470" y="40" width="150" height="50" rx="10" fill="#D1CFC5"/><text x="545" y="70" text-anchor="middle" fill="#141413" stroke="none">Vector DB</text>
+  <path d="M170 65H228" marker-end="url(#a)"/><path d="M400 65H468" marker-end="url(#a)"/>
+  <path d="M545 90V130H260V168" marker-end="url(#a)"/>
+  <text x="20" y="158" fill="#87867F" stroke="none" font-family="ui-monospace, monospace" font-size="12">QUERY TIME (every call)</text>
+  <rect x="20" y="170" width="110" height="50" rx="10" fill="#FFFFFF"/><text x="75" y="200" text-anchor="middle" fill="#141413" stroke="none">Query</text>
+  <rect x="190" y="170" width="140" height="50" rx="10" fill="#E3DACC"/><text x="260" y="200" text-anchor="middle" fill="#141413" stroke="none">Top-K chunks</text>
+  <rect x="390" y="170" width="170" height="50" rx="10" fill="#D97757"/><text x="475" y="200" text-anchor="middle" fill="#141413" stroke="none">LLM: synthesis</text>
+  <rect x="620" y="170" width="120" height="50" rx="10" fill="#FFFFFF"/><text x="680" y="200" text-anchor="middle" fill="#141413" stroke="none">Answer</text>
+  <path d="M130 195H188" marker-end="url(#a)"/><path d="M330 195H388" marker-end="url(#a)"/><path d="M560 195H618" marker-end="url(#a)"/>
+</svg>
