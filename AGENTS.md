@@ -29,7 +29,7 @@ learner/        How the human learns. Private: only README.md is tracked
   cards/        HTML flashcards per quiz
 .claude/
   agents/       librarian, auditor, curator, mentor
-  hooks/        Write limits per subagent
+  hooks/        Write limits per subagent; session-start flag report
   commands/     Slash commands for the human (/wiki-help, /promote)
 wiki.config.md  Repo-specific settings (role, content language). Never synced
 framework.txt   Staging only: the files that make up the framework
@@ -141,6 +141,10 @@ quiz / review ─► mentor ─────────────────�
   `.claude/hooks/` enforce the "Writes to" row and block the curator from
   `raw/`. The auditor has `Bash` for `git log`, so for it the limit is
   partly an instruction.
+- No agent runs in the background or on a schedule. Instead, a
+  `SessionStart` hook (`session-flags.sh`) reports pending flags when a
+  session starts; the main session tells the human at the start of its first
+  reply, and the human decides when to run `curate`.
 
 ### Where to look for what
 

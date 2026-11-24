@@ -58,3 +58,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: raw/SOURCES.md
 - notes: LangChain blog post by Harrison Chase; no open license, so the text stays on disk, excluded from git
+
+## [2026-11-24] schema | docs(schema): report pending flags at session start instead of background curation
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: no agent runs on a schedule; the human decides when to curate
