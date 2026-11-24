@@ -34,3 +34,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: LICENSE-content
 - notes: no share-alike source left; covers wiki/ and artifacts/, not third-party sources in raw/
+
+## [2026-11-24] ingest | docs(raw): list rag vs agent memory vs llm wiki comparison as link-only
+- agent: Claude (Opus 5.5)
+- files: raw/SOURCES.md
+- notes: the article text is not redistributable; it stays on disk, excluded from git
