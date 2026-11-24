@@ -53,3 +53,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-24] schema | docs(readme): add public readme with loop diagram and flashcard screenshot
 - agent: Claude (Opus 5.5)
 - files: README.md, docs/loop.svg, docs/flashcards.png
+
+## [2026-11-24] ingest | docs(raw): list how to build a knowledge factory as link-only
+- agent: Claude (Opus 5.5)
+- files: raw/SOURCES.md
+- notes: LangChain blog post by Harrison Chase; no open license, so the text stays on disk, excluded from git
