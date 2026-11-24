@@ -128,7 +128,7 @@ quiz / review ─► mentor ─────────────────�
 |---|---|---|---|---|---|
 | Runs on | Any question | `lint` | `curate` | `quiz`, `review` | `ingest`, `video`, `artifact`, `promote` |
 | Looks at | Pages needed to answer | The whole wiki | Flags and `raw/` | `wiki/`, `learner/` | Depends |
-| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `index.md`, `log.md`, `flags/` | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, framework files |
+| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `index.md`, `log.md`, `flags/`; framework files for approved `procedure` flags (staging) | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/open/` (procedure), framework files |
 | Commits | No | No | Yes | No | Yes |
 
 - The librarian finds problems in passing (mostly `missing`); the auditor
@@ -144,7 +144,8 @@ quiz / review ─► mentor ─────────────────�
 - No agent runs in the background or on a schedule. Instead, a
   `SessionStart` hook (`session-flags.sh`) reports pending flags when a
   session starts; the main session tells the human at the start of its first
-  reply, and the human decides when to run `curate`.
+  reply, and the human decides when to run `curate`. In a prod repo it also
+  reports pending `procedure` flags in staging.
 
 ### Where to look for what
 
@@ -163,9 +164,9 @@ One file per flag: `flags/open/YYYY-MM-DD-<type>-<slug>.md`, from
 
 ```markdown
 ---
-type: missing          # missing | contradiction | stale | broken-link | orphan | structure
+type: missing          # missing | contradiction | stale | broken-link | orphan | structure | procedure
 page: wiki/topics/example.md   # optional
-raised_by: librarian   # librarian | auditor | mentor
+raised_by: librarian   # librarian | auditor | mentor | main
 raised: 2026-11-24
 status: open           # open | needs-source | needs-review | closed
 suggestion: ""         # optional: the fix the raiser proposes
@@ -178,7 +179,8 @@ Short description of the gap or problem.
   page and its source, disagree), `stale` (superseded claim, or artifact
   older than its pages), `broken-link`, `orphan` (page without incoming
   links, or unembedded diagram), `structure` (index, log, frontmatter,
-  `videos.md` or framework don't match).
+  `videos.md` or framework don't match), `procedure` (the human corrected
+  how the agents work; see below).
 - States: `open` (no commit until the curator processes it),
   `needs-source` (`raw/` doesn't cover it; the human must add a source),
   `needs-review` (proposed fix awaiting approval; always for
@@ -188,6 +190,16 @@ Short description of the gap or problem.
   The curator treats it as a lead, never as a source: it still checks
   `raw/`.
 - Check `flags/open/` for duplicates first.
+
+**Procedure flags.** When the human corrects *how* something is done — a
+convention, a step, a format, something to stop doing — the main session
+raises a `procedure` flag (`raised_by: main`) right away, says so in one
+line and carries on with the corrected behavior. The flag states the
+procedure in general terms, never the conversation or personal details, and
+puts the proposed rule change in `suggestion:`. Procedures belong to the
+framework, so the flag goes where the framework is made: in a prod repo, in
+`staging_repo`'s `flags/open/`; otherwise, in this repo. One-off preferences
+that don't generalize aren't flagged.
 - Flags end up in git: they describe the wiki's gap and never quote the
   human's question, say what they asked, or name a `wiki/qa/` page.
 
@@ -451,6 +463,10 @@ flag, any state). One flag = one fix = one commit = one `log.md` entry.
      human approves (`curate <name>`).
    - A framework mismatch in prod: don't fix it; tell the human to run
      `promote`.
+   - `procedure` (staging only): write the concrete change (files and
+     diff) in the flag and set `needs-review`. Once the human approves
+     (`curate <name>`), apply it to the framework files, commit it with the
+     flag closed, and remind the human to `promote` into prod.
 4. Closing: `status: closed`, one-line `resolution:`, move to `flags/closed/`.
 5. Commit (type `curate`), including the flag in its new state.
 6. Report: closed flags, `needs-source` with the source needed,
@@ -617,6 +633,7 @@ human reviews with `git show`.
 | Flag fixed / closed / parked | `fix(wiki): resolve missing flag on embeddings`, `docs(flags): close duplicate flag on rag`, `docs(flags): park flag on langgraph as needs-source` |
 | `AGENTS.md` / `README.md` | `docs(schema): …`, `docs(readme): …` |
 | Config (`.claude/`, `.obsidian/`, `.gitignore`) | `chore(config): …` |
+| Procedure flag applied (staging) | `docs(schema): resolve procedure flag on gitignore comments` |
 | Promote (prod) | `chore(config): promote framework from staging @abc1234` |
 | Saved qa answer | No commit (private) |
 

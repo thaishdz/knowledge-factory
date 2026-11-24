@@ -86,3 +86,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-24] config | chore(config): add suggestion to flag template and agents
 - agent: Claude (Opus 5.5)
 - files: flags/TEMPLATE.md, 4 agents in .claude/agents/
+
+## [2026-11-24] schema | docs(schema): add procedure flags for the human's corrections
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: corrections on how agents work become flags in staging; the curator proposes the framework change and applies it once approved
