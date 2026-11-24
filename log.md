@@ -77,3 +77,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-24] schema | docs(readme): link the knowledge factory source and page
 - agent: Claude (Opus 5.5)
 - files: README.md
+
+## [2026-11-24] schema | docs(schema): add optional suggestion to flags
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: whoever raises a flag may propose the fix; the curator treats it as a lead and still checks raw/

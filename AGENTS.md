@@ -168,6 +168,7 @@ page: wiki/topics/example.md   # optional
 raised_by: librarian   # librarian | auditor | mentor
 raised: 2026-11-24
 status: open           # open | needs-source | needs-review | closed
+suggestion: ""         # optional: the fix the raiser proposes
 resolution: ""         # only when closing
 ---
 Short description of the gap or problem.
@@ -182,8 +183,11 @@ Short description of the gap or problem.
   `needs-source` (`raw/` doesn't cover it; the human must add a source),
   `needs-review` (proposed fix awaiting approval; always for
   `contradiction`), `closed` (moved to `flags/closed/` with a `resolution`).
-- Whoever raises a flag doesn't fix it. Check `flags/open/` for duplicates
-  first.
+- Whoever raises a flag doesn't fix it, but may propose the fix in
+  `suggestion:` (e.g. the right page, the missing fact, the corrected name).
+  The curator treats it as a lead, never as a source: it still checks
+  `raw/`.
+- Check `flags/open/` for duplicates first.
 - Flags end up in git: they describe the wiki's gap and never quote the
   human's question, say what they asked, or name a `wiki/qa/` page.
 
@@ -434,7 +438,8 @@ duplicates), then a report grouped by type. It checks:
 Done by the curator: `curate` (every `open` flag) or `curate <name>` (one
 flag, any state). One flag = one fix = one commit = one `log.md` entry.
 
-1. Read the flag, the affected page and related pages.
+1. Read the flag (including any `suggestion:`), the affected page and
+   related pages.
 2. If the problem is gone or duplicated, close it explaining why.
 3. Look in `raw/` (read-only) for what's needed:
    - Covered: fix the wiki following the page conventions (pages, sources,
