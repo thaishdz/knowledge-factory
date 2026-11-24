@@ -1,0 +1,9 @@
+.DS_Store
+.obsidian/workspace.json
+.obsidian/plugins/
+.obsidian/themes/
+.claude/settings.local.json
+learner/*
+!learner/README.md
+wiki/qa/*
+!wiki/qa/README.md

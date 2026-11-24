@@ -1,0 +1,15 @@
+AGENTS.md
+CLAUDE.md
+.gitignore
+.claude/settings.json
+.claude/agents/librarian.md
+.claude/agents/auditor.md
+.claude/agents/curator.md
+.claude/agents/mentor.md
+.claude/hooks/guard-paths.sh
+.claude/hooks/guard-raw.sh
+.claude/commands/wiki-help.md
+.claude/commands/promote.md
+flags/TEMPLATE.md
+learner/README.md
+wiki/qa/README.md

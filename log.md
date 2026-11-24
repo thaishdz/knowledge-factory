@@ -10,3 +10,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-24] config | chore(config): add agents, hooks and commands
 - agent: Claude (Opus 5.5)
 - files: 4 agents, 2 hooks, 2 commands, settings.json in .claude/
+
+## [2026-11-24] config | chore(config): add repo skeleton and staging config
+- agent: Claude (Opus 5.5)
+- files: wiki.config.md, framework.txt, .gitignore, .obsidian/, flags/, learner/README.md, wiki/qa/README.md, index.md, videos.md, raw/SOURCES.md, empty folders
