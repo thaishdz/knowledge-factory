@@ -22,7 +22,7 @@ it's empty, say nothing.
 
 ---
 
-## Alejandria cheat sheet
+## Wiki cheat sheet
 
 **Ask the wiki** → *librarian*
 - Type the question as-is. It answers only from the wiki, cites the pages

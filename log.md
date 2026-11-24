@@ -44,3 +44,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: 6 pages in wiki/ (4 topics, 1 entity, 1 comparison), 4 diagrams in wiki/assets/, index.md
 - notes: English translation of the pages built from this source in a private wiki; content unchanged
+
+## [2026-11-24] config | chore(config): make agent prompts repo-agnostic
+- agent: Claude (Opus 5.5)
+- files: 4 agents in .claude/agents/, .claude/commands/wiki-help.md
+- notes: prompts no longer name a specific wiki, so the framework fits any repo
