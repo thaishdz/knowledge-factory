@@ -96,3 +96,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: flags/TEMPLATE.md, .claude/agents/curator.md, .claude/hooks/session-flags.sh
 - notes: in prod, the session-start report also counts procedure flags waiting in staging
+
+## [2026-11-24] config | chore(config): mention procedure flags and suggestions in wiki-help
+- agent: Claude (Opus 5.5)
+- files: .claude/commands/wiki-help.md

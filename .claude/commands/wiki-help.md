@@ -58,5 +58,7 @@ it's empty, say nothing.
 - `needs-source` → add a source to `raw/`, run `ingest`, then `curate <name>`
 - `needs-review` → read the proposal in the flag and approve it with `curate <name>`
 - `closed` → review the commit with `git show`
+- `procedure` flags (raised when you correct how an agent works) live in the staging repo → `curate` there, approve, then `promote`
+- Any flag may carry a `suggestion:` with the proposed fix
 
 <name> = part of the file name, no path or extension. Full rules in `AGENTS.md`.
