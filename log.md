@@ -68,3 +68,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: .claude/hooks/session-flags.sh, .claude/settings.json, framework.txt
 - notes: read-only; prints a summary and asks the main session to mention it
+
+## [2026-11-24] ingest | docs(wiki): ingest how to build a knowledge factory
+- agent: Claude (Opus 5.5)
+- files: wiki/topics/knowledge-factory.md, wiki/entities/harrison-chase.md, wiki/entities/langchain.md, wiki/topics/llm-wiki.md, index.md
+- notes: 3 new pages; llm-wiki gains a related link

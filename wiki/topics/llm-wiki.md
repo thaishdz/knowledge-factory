@@ -64,6 +64,7 @@ There is also a structural gap: the wiki knows the domain but not who is reading
 - [[andrej-karpathy]]
 - [[rag]]
 - [[agent-memory]]
+- [[knowledge-factory]]
 
 ## Sources
 - `raw/articles/RAG vs. Agent Memory vs. LLM Wiki_ A Practical Comparison.md` (link-only, see `raw/SOURCES.md`)
