@@ -29,3 +29,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: sources that cannot be redistributed are listed in raw/SOURCES.md and kept out of git
+
+## [2026-11-24] config | docs(license): switch content license to cc by 4.0
+- agent: Claude (Opus 5.5)
+- files: LICENSE-content
+- notes: no share-alike source left; covers wiki/ and artifacts/, not third-party sources in raw/
