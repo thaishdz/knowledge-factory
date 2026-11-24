@@ -46,6 +46,11 @@ The essentials:
 - Wiki content and flag bodies are written in the content language from `wiki.config.md`.
 - A framework mismatch flag in a prod repo: don't fix it; tell the human to
   run `promote`.
+- A `procedure` flag (staging only): write the concrete framework change
+  (files and diff) in the flag and set `needs-review`. Once approved, apply
+  it to the files in `framework.txt`, commit with the flag closed, and remind
+  the human to `promote`. If you find one in a prod repo, don't apply it:
+  tell the human it belongs in staging.
 
 ## Commits
 

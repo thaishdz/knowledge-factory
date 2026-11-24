@@ -91,3 +91,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: corrections on how agents work become flags in staging; the curator proposes the framework change and applies it once approved
+
+## [2026-11-24] config | chore(config): handle procedure flags in template, curator and session hook
+- agent: Claude (Opus 5.5)
+- files: flags/TEMPLATE.md, .claude/agents/curator.md, .claude/hooks/session-flags.sh
+- notes: in prod, the session-start report also counts procedure flags waiting in staging
