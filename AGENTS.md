@@ -10,7 +10,7 @@ everything else, each in its own area. Read this whole file and
 ```
 raw/            Original sources; the root is the inbox
   articles/ papers/ repos/ assets/
-  SOURCES.md    Title, author, URL and license of every source
+  SOURCES.md    Title, author, URL and license of every source; marks link-only ones
 wiki/           Pages maintained by the agents
   entities/     Named things: tools, people, companies, projects
   topics/       Concepts and ideas
@@ -53,6 +53,12 @@ README.md       Onboarding for humans. Not part of the wiki
 5. `log.md` mirrors git: one entry per commit, nothing else.
 6. Every page created, renamed or deleted is reflected in `index.md`.
 7. The agents make the commits, not the human.
+8. A source whose license doesn't allow redistribution is **link-only**:
+   `raw/SOURCES.md` lists it with its URL and `link-only`, and its file is
+   kept out of git with `.git/info/exclude` (not `.gitignore`, which is
+   shared). Pages cite it as usual. If its file isn't on disk, an agent that
+   needs the text says so instead of guessing (the curator uses
+   `needs-source`).
 
 ## Language
 
@@ -286,7 +292,8 @@ table. If commands, roles or flag states change, update it too.
    None: say so and list the sources without an ingest in `log.md`.
 2. If it's in the root of `raw/`, ask its category (`article`, `paper`,
    `repo`), suggesting the likeliest, and move it. If it's already in a
-   category folder, don't ask. Make sure `raw/SOURCES.md` lists it.
+   category folder, don't ask. Make sure `raw/SOURCES.md` lists it, with
+   its license; if it can't be redistributed, mark it link-only (rule 8).
 3. Read it whole, then any images in `raw/assets/` it references. If images
    are still remote URLs, ask the human to press `Cmd+Shift+D` in Obsidian
    ("Download attachments for current file"); you can't. After a move,

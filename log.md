@@ -24,3 +24,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: .gitignore, .obsidian/ (untracked)
 - notes: editor settings are personal; the folder stays on disk but leaves the repo
+
+## [2026-11-24] schema | docs(schema): add link-only sources
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: sources that cannot be redistributed are listed in raw/SOURCES.md and kept out of git
