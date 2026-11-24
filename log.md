@@ -19,3 +19,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: LICENSE, LICENSE-content
 - notes: MIT for the framework; CC BY-SA 4.0 for the sample content
+
+## [2026-11-24] config | chore(config): ignore obsidian folder
+- agent: Claude (Opus 5.5)
+- files: .gitignore, .obsidian/ (untracked)
+- notes: editor settings are personal; the folder stays on disk but leaves the repo

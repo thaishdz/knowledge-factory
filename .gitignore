@@ -1,7 +1,5 @@
 .DS_Store
-.obsidian/workspace.json
-.obsidian/plugins/
-.obsidian/themes/
+.obsidian/
 .claude/settings.local.json
 learner/*
 !learner/README.md
