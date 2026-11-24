@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="none" stroke="#87867F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L9 5L1 9" stroke="#87867F" stroke-width="2" fill="none"/></marker></defs>
+  <rect x="0" y="0" width="900" height="360" fill="#FAF9F5" stroke="none"/>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#87867F" stroke="none" letter-spacing="1.5">
+    <text x="20" y="30">KNOWLEDGE LOOP · IN GIT</text>
+    <text x="20" y="232">LEARNING LOOP · PRIVATE</text>
+  </g>
+  <rect x="20" y="48" width="130" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="190" y="48" width="130" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="20" y="114" width="130" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="190" y="114" width="130" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="370" y="81" width="140" height="44" rx="10" fill="#E3DACC" stroke="#D97757"/>
+  <rect x="550" y="81" width="130" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="720" y="81" width="160" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="550" y="150" width="130" height="36" rx="10" fill="#F0EEE6"/>
+  <path d="M150 70H186" marker-end="url(#a)"/>
+  <path d="M150 136H186" marker-end="url(#a)"/>
+  <path d="M320 70C345 70 345 96 366 96" marker-end="url(#a)"/>
+  <path d="M320 136C345 136 345 110 366 110" marker-end="url(#a)"/>
+  <path d="M510 103H546" marker-end="url(#a)"/>
+  <path d="M680 103H716" marker-end="url(#a)"/>
+  <path d="M615 125V146" marker-end="url(#a)"/>
+  <path d="M20 210H880" stroke="#D1CFC5" stroke-dasharray="2 8"/>
+  <rect x="20" y="252" width="130" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="190" y="252" width="130" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="370" y="252" width="140" height="44" rx="10" fill="#FFFFFF"/>
+  <rect x="590" y="252" width="130" height="44" rx="10" fill="#E3DACC" stroke="#D97757"/>
+  <path d="M150 274H186" marker-end="url(#a)"/>
+  <path d="M320 274H366" marker-end="url(#a)"/>
+  <path d="M510 274H586" marker-end="url(#a)"/>
+  <path d="M655 296C655 334 255 334 255 300" marker-end="url(#a)"/>
+  <path d="M330 252C360 205 405 170 430 131" stroke-dasharray="3 7" marker-end="url(#a)"/>
+  <g fill="#141413" stroke="none" text-anchor="middle">
+    <text x="85" y="75">a question</text>
+    <text x="255" y="75" font-weight="600">librarian</text>
+    <text x="85" y="141">lint</text>
+    <text x="255" y="141" font-weight="600">auditor</text>
+    <text x="440" y="108" font-family="ui-monospace, Menlo, monospace" font-size="14">flags/open/</text>
+    <text x="615" y="108" font-weight="600">curator</text>
+    <text x="800" y="108">wiki/ + commit</text>
+    <text x="615" y="173" font-size="13" fill="#3D3D3A">needs-source</text>
+    <text x="85" y="279">quiz / review</text>
+    <text x="255" y="279" font-weight="600">mentor</text>
+    <text x="440" y="279">flashcards</text>
+    <text x="655" y="279" font-family="ui-monospace, Menlo, monospace" font-size="14">learner/</text>
+  </g>
+  <g fill="#87867F" stroke="none" font-size="13">
+    <text x="696" y="173">→ you add a source to raw/</text>
+    <text x="548" y="264" text-anchor="middle">paste</text>
+    <text x="736" y="270">profile +</text>
+    <text x="736" y="288">Leitner review</text>
+    <text x="455" y="352" text-anchor="middle">shapes the next quiz</text>
+    <text x="358" y="192" text-anchor="end">confusing page</text>
+  </g>
+</svg>

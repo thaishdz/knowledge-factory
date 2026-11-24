@@ -49,3 +49,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: 4 agents in .claude/agents/, .claude/commands/wiki-help.md
 - notes: prompts no longer name a specific wiki, so the framework fits any repo
+
+## [2026-11-24] schema | docs(readme): add public readme with loop diagram and flashcard screenshot
+- agent: Claude (Opus 5.5)
+- files: README.md, docs/loop.svg, docs/flashcards.png
