@@ -82,3 +82,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: whoever raises a flag may propose the fix; the curator treats it as a lead and still checks raw/
+
+## [2026-11-24] config | chore(config): add suggestion to flag template and agents
+- agent: Claude (Opus 5.5)
+- files: flags/TEMPLATE.md, 4 agents in .claude/agents/

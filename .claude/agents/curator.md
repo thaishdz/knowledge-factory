@@ -32,6 +32,8 @@ the flag whose file name contains `<name>` (including `needs-review` or
 The essentials:
 
 - One flag = one fix = one commit = one entry in `log.md` (type `curate`).
+- A flag's `suggestion:` is a lead, not a source: verify it against `raw/`
+  before using it.
 - `raw/` is the source of truth and is read-only. A hook blocks writes to
   `raw/`.
 - If `raw/` doesn't cover the gap: `status: needs-source`, explain which

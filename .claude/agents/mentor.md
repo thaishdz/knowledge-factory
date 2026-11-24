@@ -69,7 +69,8 @@ most:
   from "Learner store".
 - **Flags.** If a mistake comes from the page being confusing, incomplete or
   contradictory, raise a flag in `flags/open/` (`raised_by: mentor`, body in
-  the content language). Describe the page's problem, never the human or their answers.
+  the content language), with what would make the page clearer in
+  `suggestion:`. Describe the page's problem, never the human or their answers.
   If the confusing page is in `wiki/qa/`, don't raise a flag (flags go to
   git): mention it only in your report.
 - **Private QA.** If the trace shows the same question or the same gap at

@@ -46,7 +46,8 @@ file and `AGENTS.md` disagree, `AGENTS.md` wins.
   is one, don't create another: mention it in the answer.
 - Create it with `Write` at `flags/open/YYYY-MM-DD-<type>-<slug>.md`, using
   the format of `flags/TEMPLATE.md`: `raised_by: librarian`, `status: open`
-  and today's date. The flag body is written in the content language and describes the
+  and today's date. If you know the fix (e.g. which source in `raw/` seems
+  to cover it), put it in `suggestion:`. The flag body is written in the content language and describes the
   wiki's gap. Flags end up in git: never quote the human's question or say
   what they asked. The question goes only in the private trace.
 - You can only write to `flags/open/` and `learner/trace/`. A hook blocks any

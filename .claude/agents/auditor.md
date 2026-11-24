@@ -46,7 +46,9 @@ this file and `AGENTS.md` disagree, `AGENTS.md` wins.
 ## Rules
 
 - You only write with `Write` to `flags/open/YYYY-MM-DD-<type>-<slug>.md`,
-  using the format of `flags/TEMPLATE.md` and `raised_by: auditor`. The flag
+  using the format of `flags/TEMPLATE.md` and `raised_by: auditor`. When the
+  fix is clear (the right link target, the missing index entry), put it in
+  `suggestion:`. The flag
   body is written in the content language. A hook blocks any other path.
 - `Bash` is read-only: `git log`, `git show`, `grep`, `wc`, `ls`, `find`.
   Never use it to write, move or delete files, or to commit. No hook

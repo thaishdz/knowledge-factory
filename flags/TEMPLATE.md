@@ -4,6 +4,7 @@ page: wiki/topics/example.md   # optional: leave empty if no page is affected
 raised_by: librarian   # librarian | auditor | mentor
 raised: YYYY-MM-DD
 status: open           # open | needs-source | needs-review | closed
+suggestion: ""         # optional: the fix you propose
 resolution: ""         # only when closing
 ---
 Short description of the gap or problem: what is missing or wrong, and where
