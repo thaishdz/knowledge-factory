@@ -7,9 +7,10 @@ to how you learn.
 
 It combines Andrej Karpathy's
 [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
-pattern with the "knowledge factory" idea from Harrison Chase's post *How to
-build a knowledge factory*: the agents that **use** knowledge never
-**maintain** it.
+pattern with the "knowledge factory" idea from Harrison Chase's post
+[How to build a knowledge factory](https://www.langchain.com/blog/knowledge-factory)
+(summarized in [`wiki/topics/knowledge-factory.md`](wiki/topics/knowledge-factory.md)):
+the agents that **use** knowledge never **maintain** it.
 
 ![The knowledge loop and the learning loop](docs/loop.svg)
 
@@ -120,12 +121,14 @@ index.md · log.md · videos.md
 
 ## Sample content
 
-The wiki ships with six pages and four diagrams compiled from
-[RAG vs. Agent Memory vs. LLM Wiki: A Practical Comparison](https://dev.to/vishalmysore/rag-vs-agent-memory-vs-llm-wiki-a-practical-comparison-1oo6)
-by vishalmysore. The article itself isn't included, because its license
-doesn't allow redistribution: it's listed as a **link-only** source in
-`raw/SOURCES.md`. Download it into `raw/articles/` if you want the agents to
-work with it.
+The wiki ships with nine pages and four diagrams compiled from two articles:
+
+- [RAG vs. Agent Memory vs. LLM Wiki: A Practical Comparison](https://dev.to/vishalmysore/rag-vs-agent-memory-vs-llm-wiki-a-practical-comparison-1oo6) by vishalmysore
+- [How to build a knowledge factory](https://www.langchain.com/blog/knowledge-factory) by Harrison Chase
+
+The articles themselves aren't included, because their licenses don't allow
+redistribution: they're listed as **link-only** sources in `raw/SOURCES.md`.
+Download them into `raw/articles/` if you want the agents to work with them.
 
 ## License
 

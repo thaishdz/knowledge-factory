@@ -73,3 +73,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: wiki/topics/knowledge-factory.md, wiki/entities/harrison-chase.md, wiki/entities/langchain.md, wiki/topics/llm-wiki.md, index.md
 - notes: 3 new pages; llm-wiki gains a related link
+
+## [2026-11-24] schema | docs(readme): link the knowledge factory source and page
+- agent: Claude (Opus 5.5)
+- files: README.md
