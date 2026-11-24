@@ -63,3 +63,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: no agent runs on a schedule; the human decides when to curate
+
+## [2026-11-24] config | chore(config): add session-start hook that reports pending flags
+- agent: Claude (Opus 5.5)
+- files: .claude/hooks/session-flags.sh, .claude/settings.json, framework.txt
+- notes: read-only; prints a summary and asks the main session to mention it
