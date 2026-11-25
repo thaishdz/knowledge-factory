@@ -24,14 +24,14 @@ only job is to close flags using your sources.
 
 ## The agents
 
-| | Consultant | Auditor | Curator | Mentor |
+| | Tutor | Auditor | Curator | Mentor |
 |---|---|---|---|---|
 | Runs when | You ask a question | You run `lint` | You run `curate` | You run `quiz` or `review` |
 | Looks at | The pages it needs | The whole wiki | Open flags and `raw/` | The wiki and your profile |
 | Produces | An answer that cites pages, plus a flag if something's off | Only flags | Fixes, a commit, a log entry | Flashcards, grading, an updated profile |
 | Edits the wiki | No | No | Yes | No |
 
-Hooks in `.claude/hooks/` enforce these limits: the consultant, auditor and
+Hooks in `.claude/hooks/` enforce these limits: the tutor, auditor and
 mentor physically can't write outside their folders, and the curator can't
 touch your sources. Every change is an unsigned Conventional Commit with a
 matching entry in `log.md`.
@@ -91,7 +91,7 @@ so web clippings keep their images locally.
 
 | Command | What it does |
 |---|---|
-| *(a question)* | The consultant answers from the wiki and cites pages |
+| *(a question)* | The tutor answers from the wiki and cites pages |
 | `ingest <name>` | Adds a source from `raw/` to the wiki, after your approval |
 | `video <url> for <name>` | Records a suggested video under an article |
 | `artifact <topic>` | Builds a visual HTML summary of a topic |
