@@ -100,3 +100,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-24] config | chore(config): mention procedure flags and suggestions in wiki-help
 - agent: Claude (Opus 5.5)
 - files: .claude/commands/wiki-help.md
+
+## [2026-11-25] schema | docs(schema): rename librarian to consultant
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: the question-answering role is renamed consultant; older log entries and flags keep the old name

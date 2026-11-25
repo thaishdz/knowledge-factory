@@ -28,7 +28,7 @@ learner/        How the human learns. Private: only README.md is tracked
   quiz.md       Quiz waiting to be graded (only while one is open)
   cards/        HTML flashcards per quiz
 .claude/
-  agents/       librarian, auditor, curator, mentor
+  agents/       consultant, auditor, curator, mentor
   hooks/        Write limits per subagent; session-start flag report
   commands/     Slash commands for the human (/wiki-help, /promote)
 wiki.config.md  Repo-specific settings (role, content language). Never synced
@@ -114,24 +114,24 @@ or something looks wrong, it raises a flag instead of guessing; a separate
 agent, the curator, processes flags and updates the store (this git repo).
 
 ```
-question ─► librarian ─┐
-                       ├─► flags/open/ ─► curator ─► wiki/ + commit ─► better answers
-lint ─────► auditor ───┘                     └─► needs-source ─► the human adds a source
+question ─► consultant ─┐
+                        ├─► flags/open/ ─► curator ─► wiki/ + commit ─► better answers
+lint ─────► auditor ────┘                     └─► needs-source ─► the human adds a source
 
-question ─► librarian ─► learner/trace/ ─┐
-quiz / review ─► mentor ─────────────────┴─► learner/profile.md + review.md ─► better quizzes
+question ─► consultant ─► learner/trace/ ─┐
+quiz / review ─► mentor ──────────────────┴─► learner/profile.md + review.md ─► better quizzes
 ```
 
 ### Roles
 
-| | Librarian | Auditor | Curator | Mentor | Main session |
+| | Consultant | Auditor | Curator | Mentor | Main session |
 |---|---|---|---|---|---|
 | Runs on | Any question | `lint` | `curate` | `quiz`, `review` | `ingest`, `video`, `artifact`, `promote` |
 | Looks at | Pages needed to answer | The whole wiki | Flags and `raw/` | `wiki/`, `learner/` | Depends |
 | Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `index.md`, `log.md`, `flags/`; framework files for approved `procedure` flags (staging) | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/open/` (procedure), framework files |
 | Commits | No | No | Yes | No | Yes |
 
-- The librarian finds problems in passing (mostly `missing`); the auditor
+- The consultant finds problems in passing (mostly `missing`); the auditor
   reviews everything (mostly structure). The curator closes duplicates.
 - The main session delegates to the right subagent and relays its report.
   Operations that need the human's approval halfway (ingest, video,
@@ -152,7 +152,7 @@ quiz / review ─► mentor ─────────────────�
 1. `index.md` first: which pages exist and what they cover.
 2. `wiki/`: what answers come from. `wiki/qa/` isn't in the index: use
    Glob/Grep.
-3. `raw/`: source of truth. The librarian never answers from it (that's a
+3. `raw/`: source of truth. The consultant never answers from it (that's a
    `missing` flag); the curator uses it to fix the wiki.
 4. `log.md`, `git log` and each page's `updated`: what changed and when.
 5. `videos.md`: never a source for claims.
@@ -166,7 +166,7 @@ One file per flag: `flags/open/YYYY-MM-DD-<type>-<slug>.md`, from
 ---
 type: missing          # missing | contradiction | stale | broken-link | orphan | structure | procedure
 page: wiki/topics/example.md   # optional
-raised_by: librarian   # librarian | auditor | mentor | main
+raised_by: consultant  # consultant | auditor | mentor | main
 raised: 2026-11-24
 status: open           # open | needs-source | needs-review | closed
 suggestion: ""         # optional: the fix the raiser proposes
@@ -214,7 +214,7 @@ external service. Never `git add -f` it.
 **`trace/YYYY-MM.md`** (L1). Append-only. One entry per event:
 
 ```markdown
-## 2026-11-24 · question · librarian
+## 2026-11-24 · question · consultant
 - q: "How is an LLM Wiki different from RAG?"
 - pages: [[rag]], [[llm-wiki]]
 - gap: missing (flags/open/2026-11-24-missing-example.md)
@@ -293,7 +293,7 @@ extensions.
 | `video <url> for <name>` | Video (normal form) | Main session |
 | `video <url>` | Video, suggesting an article | Main session |
 | `artifact <topic>` | Artifact | Main session |
-| *(a question)* | Query | Librarian |
+| *(a question)* | Query | Consultant |
 | `lint` | Lint | Auditor |
 | `curate` / `curate <name>` | Curate all open flags / one flag | Curator |
 | `quiz <topic>` / `review` | Quiz on a topic / on what's due today | Mentor |
@@ -413,7 +413,7 @@ its content or exact layout.
 
 ### Query
 
-Done by the librarian; the main session passes the question as-is and
+Done by the consultant; the main session passes the question as-is and
 relays the answer.
 
 1. Read `index.md` and the relevant pages (including `wiki/qa/`).
