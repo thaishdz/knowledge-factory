@@ -44,7 +44,7 @@ it's empty, say nothing.
 | `video <url> for <name>` | Records a video under an article, no questions asked |
 | `video <url>` | Same, but suggests the article |
 | `artifact <topic>` | Generates a visual summary in HTML |
-- The main session plans and reviews; the *implementer* (Sonnet) writes the approved plan and *Explore* (Haiku) does the lookups.
+- The main session plans and reviews; the *curator* (Sonnet) writes the approved plan and *Explore* (Haiku) does the lookups.
 
 **Maintenance** → *auditor* and *curator*
 | Command | Who | What it does |

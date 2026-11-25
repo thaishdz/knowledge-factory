@@ -158,3 +158,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: the curator also writes approved ingest, artifact and qa plans; the main session reviews and commits them
+
+## [2026-11-25] config | chore(config): merge implementer agent into curator
+- agent: Claude (Opus 5.5)
+- files: .claude/agents/curator.md, .claude/agents/implementer.md (removed), .claude/commands/wiki-help.md, framework.txt
