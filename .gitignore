@@ -2,6 +2,7 @@
 .obsidian/
 .claude/settings.local.json
 .claude/.onboarded
+.claude/.language
 learner/*
 !learner/README.md
 wiki/qa/*

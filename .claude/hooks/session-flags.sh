@@ -14,7 +14,13 @@ for f in flags/open/*.md; do
   esac
 done
 total=$(( ${#open[@]} + ${#review[@]} + ${#source[@]} ))
-lang="FIRST, before anything else in your first reply, ask the human whether to talk in Spanish or English this session, and use that language for the rest of the session (your replies and the agent reports you relay). Pass that language to subagents in your request."
+saved=$(cat .claude/.language 2>/dev/null | tr -d '[:space:]')
+case "$saved" in es) savedname="Spanish" ;; en) savedname="English" ;; *) saved="" ;; esac
+if [ -n "$saved" ]; then
+  lang="The human already chose the conversation language: $savedname. Do not ask it again: talk in $savedname for the whole session (your replies and the agent reports you relay) and pass it to subagents in your request. If the human says they want to switch language, ask again with the language menu described below and use the new choice. Language menu: call the AskUserQuestion tool once with header 'Language', question 'Idioma / Language?', options 'Español' and 'English'."
+else
+  lang="FIRST, before anything else in your first reply, ask the conversation language by calling the AskUserQuestion tool once (a menu, not plain text): header 'Language', question 'Idioma / Language?', options 'Español' and 'English'. Then use the chosen language for the rest of the session (your replies and the agent reports you relay) and pass it to subagents in your request."
+fi
 langmenu="On this first run do NOT ask the language in plain text: it is asked in the onboarding menu (AskUserQuestion) that you show in your reply to the human's first message. Use the chosen language for the rest of the session and pass it to subagents."
 # First-run welcome: only while sample content is on disk and the marker is absent.
 # The assistant never speaks first, so the welcome goes in a visible systemMessage;
@@ -25,7 +31,7 @@ if [ ! -e .claude/.onboarded ] && [ -f .claude/scripts/sample-content.txt ]; the
     case "$p" in ''|'#'*) continue ;; esac
     if [ -e "$p" ]; then
       welcome="Welcome! This is a wiki that agents build from your sources; you only write in plain words. Write anything to start (e.g. hello): I'll show you the sample or help you start your own wiki."
-      lang="$langmenu"
+      [ -z "$saved" ] && lang="$langmenu"
       break
     fi
   done < .claude/scripts/sample-content.txt
