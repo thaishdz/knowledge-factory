@@ -163,9 +163,11 @@ quiz / review ─► mentor ─────────────┴─► lea
   startup (`systemMessage`: "Write anything to start"), because the assistant
   never speaks first. A `UserPromptSubmit` hook (`onboarding.sh`) then adds
   the onboarding instruction to the reply to their first message, even if it
-  is a slash command, and only then creates the marker: right after the
-  language question, welcome the human once and offer two paths: explore the
-  sample or start their own wiki.
+  is a slash command, and only then creates the marker. The instruction is a
+  menu: after one or two lines of welcome, the main session calls
+  `AskUserQuestion` once with the language and what to do first (explore the
+  sample, start their own wiki, or what can I say). The language is asked
+  only there, not separately in text.
 
 ### Models and delegation
 
