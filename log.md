@@ -153,3 +153,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] schema | docs(readme): describe flags as private
 - agent: Claude (Opus 5.5)
 - files: README.md
+
+## [2026-11-25] schema | docs(schema): merge implementer into curator
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: the curator also writes approved ingest, artifact and qa plans; the main session reviews and commits them

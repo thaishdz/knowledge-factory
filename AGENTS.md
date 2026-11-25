@@ -28,7 +28,7 @@ learner/        How the human learns. Private: only README.md is tracked
   quiz.md       Quiz waiting to be graded (only while one is open)
   cards/        HTML flashcards per quiz
 .claude/
-  agents/       tutor, auditor, curator, mentor; Explore, implementer
+  agents/       tutor, auditor, curator, mentor; Explore
   hooks/        Write limits per subagent; session-start flag report
   commands/     Slash commands for the human (/wiki-help, /promote)
 wiki.config.md  Repo-specific settings (role, content language). Never synced
@@ -126,10 +126,10 @@ quiz / review ─► mentor ─────────────┴─► lea
 
 | | Tutor | Auditor | Curator | Mentor | Main session |
 |---|---|---|---|---|---|
-| Runs on | Any question | `lint` | `curate` | `quiz`, `review` | `ingest`, `video`, `artifact`, `promote` |
-| Looks at | Pages needed to answer | The whole wiki | Flags and `raw/` | `wiki/`, `learner/` | Depends |
-| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `index.md`, `log.md`, `flags/`; framework files for approved `procedure` flags (staging) | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/open/` (procedure), framework files |
-| Commits | No | No | Yes | No | Yes |
+| Runs on | Any question | `lint` | `curate`; approved plans from the main session | `quiz`, `review` | `ingest`, `video`, `artifact`, `promote` |
+| Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | Depends |
+| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/`; framework files for approved `procedure` flags (staging) | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/open/` (procedure), framework files |
+| Commits | No | No | Yes (`curate` only) | No | Yes |
 
 - The tutor answers the human's questions; the mentor quizzes them and
   tracks how they learn. Neither edits the wiki.
@@ -160,8 +160,8 @@ Haiku; writing goes to Sonnet:
 | Agent | Model | Does |
 |---|---|---|
 | `Explore` | Haiku | Read-only lookups for the main session: which pages, sources or files cover something. Returns paths and short findings |
-| `implementer` | Sonnet | Writes an approved plan (ingest pages, artifact, saved qa page), runs the wiki checks, never commits. Writes only to `wiki/`, `artifacts/`, `index.md`, `videos.md` |
-| tutor, auditor, curator, mentor | Sonnet | Their roles above |
+| curator | Sonnet | Its flags, plus the writing of approved plans (ingest pages, artifact, saved qa page): writes, runs the wiki checks and leaves the commit to the main session |
+| tutor, auditor, mentor | Sonnet | Their roles above |
 
 - `Explore` must keep that exact name: it replaces Claude Code's built-in
   `Explore`, which runs on the session's model.
@@ -285,7 +285,7 @@ up), but private because they reveal what the human asks:
 - Only `README.md` is tracked: no commit, no `log.md` entry, not in
   `index.md`. Public pages don't link to them; they may link to public pages.
 - The mentor proposes one when the trace shows the same question or gap at
-  least twice; if the human accepts, the main session has the `implementer`
+  least twice; if the human accepts, the main session has the curator
   write it.
 - If the answer needs something the wiki lacks, a `missing` flag comes first.
 - Problems inside `wiki/qa/` are reported, not flagged; the main session
@@ -350,7 +350,7 @@ table. If commands, roles or flag states change, update it too.
 4. Summarize the key points and the pages you'll create or touch. Wait for
    approval.
 5. Read `index.md` and the related pages.
-6. Delegate to the `implementer`, passing the approved summary as its plan:
+6. Delegate to the curator, passing the approved summary as its plan:
    create the new pages the source justifies; update affected pages (info,
    `sources`, `updated`); add cross-links both ways; update `index.md`.
    Review its changes and checks before committing.
@@ -383,7 +383,7 @@ from the wiki and regenerable at any time. Not a source or a wiki page.
    so and stop.
 2. Say which pages you'll use and which sections it'll have. Wait for
    approval.
-3. Delegate to the `implementer` with the approved pages and sections: it
+3. Delegate to the curator with the approved pages and sections: it
    writes `artifacts/<topic-in-kebab-case>.html` (overwrite if it exists)
    and adds it to the "Artifacts" section of `index.md`.
 4. Review the artifact against the rules below and commit.
