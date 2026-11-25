@@ -58,8 +58,9 @@ If a card trips you up because the page itself is unclear, the mentor
 raises a flag about the page and the curator fixes it.
 
 **Your learning data stays on your machine.** Everything in `learner/` and
-`wiki/qa/` except their README is in `.gitignore`. Flags describe gaps in the
-wiki, never your questions.
+`wiki/qa/` except their README is in `.gitignore`. Flags are private too:
+they're the factory's own working notes, describe gaps in the wiki (never
+your questions) and stay out of git.
 
 ## Quick start
 
@@ -115,7 +116,7 @@ way only, so your wiki never gets a half-finished rule.
 raw/          Sources (articles/ papers/ repos/ assets/) + SOURCES.md
 wiki/         entities/ topics/ comparisons/ timelines/ qa/ (private) assets/
 artifacts/    Visual HTML summaries
-flags/        open/ closed/ TEMPLATE.md
+flags/        open/ closed/ (private) TEMPLATE.md
 learner/      Your learning profile (private)
 .claude/      agents/ hooks/ commands/
 AGENTS.md     The schema every agent follows

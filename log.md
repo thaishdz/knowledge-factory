@@ -149,3 +149,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] config | chore(config): ignore flags in git and stop committing them
 - agent: Claude (Opus 5.5)
 - files: .gitignore, .claude/agents/curator.md, .claude/agents/tutor.md, .claude/agents/auditor.md, .claude/agents/mentor.md, .claude/commands/wiki-help.md
+
+## [2026-11-25] schema | docs(readme): describe flags as private
+- agent: Claude (Opus 5.5)
+- files: README.md
