@@ -24,6 +24,16 @@ it's empty, say nothing.
 
 ## Wiki cheat sheet
 
+**You only need three things:**
+1. **Name a topic or hand over material**: "I want to learn RAG", "here's a
+   RAG course" (or `study <topic>`). I show you one plan; once you approve
+   it, I run every agent: build the wiki, check it, make a visual summary
+   and a quiz.
+2. **Ask anything** about what you're learning.
+3. **Paste the `QUIZ RESULTS`** when you finish the cards.
+
+Everything below is optional: shortcuts to run a single step.
+
 **Ask the wiki** → *tutor* (answers your questions; the *mentor* quizzes you)
 - Type the question as-is. It answers only from the wiki, cites the pages
   and raises a flag if something is missing or doesn't add up.
