@@ -74,14 +74,18 @@ wiki and its graph.
    keep a copy of this repo as staging (see below).
 3. Empty the sample content if you want a blank wiki: `wiki/`, `index.md`,
    `log.md`, `raw/SOURCES.md`.
-4. Drop a source in `raw/` and run `claude` in the repo:
+4. Drop your sources in `raw/` (or hand them over in the chat), run
+   `claude` in the repo and say what you want to learn:
 
    ```
-   ingest <part of the file name>
+   study rag
    ```
 
-5. Ask questions, run `lint` now and then, `curate` to close flags, and
-   `quiz <topic>` to practice. `/wiki-help` shows every command.
+   You approve one plan; then the main session runs every agent: it builds
+   the wiki pages, checks them, fixes what it can, makes a visual summary
+   and opens a quiz.
+5. Ask questions and paste your quiz results. That's all you need;
+   `/wiki-help` lists the optional shortcuts.
 
 **Obsidian setup (optional):** open the folder as a vault, set *Settings →
 Files and links → Default location for new attachments* to `raw/assets`, and
@@ -90,8 +94,13 @@ so web clippings keep their images locally.
 
 ## Commands
 
+Only `study`, questions and pasted quiz results are needed; the rest are
+shortcuts for a single step.
+
+
 | Command | What it does |
 |---|---|
+| `study <topic>` *(or just say it)* | Plans, then builds the wiki, checks it, makes a summary and a quiz, after one approval |
 | *(a question)* | The tutor answers from the wiki and cites pages |
 | `ingest <name>` | Adds a source from `raw/` to the wiki, after your approval |
 | `video <url> for <name>` | Records a suggested video under an article |

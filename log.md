@@ -175,3 +175,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] config | chore(config): lead wiki-help with the study flow
 - agent: Claude (Opus 5.5)
 - files: .claude/commands/wiki-help.md
+
+## [2026-11-25] schema | docs(readme): make study the quick start
+- agent: Claude (Opus 5.5)
+- files: README.md
