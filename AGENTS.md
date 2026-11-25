@@ -30,9 +30,8 @@ learner/        How the human learns. Private: only README.md is tracked
 .claude/
   agents/       tutor, auditor, curator, mentor, archivist; Explore
   hooks/        Write limits per subagent; session-start flag report
-  commands/     Slash commands for the human (/wiki-help, /promote)
-wiki.config.md  Repo-specific settings (role, content language). Never synced
-framework.txt   Staging only: the files that make up the framework
+  commands/     Slash commands for the human (/wiki-help)
+wiki.config.md  Repo-specific settings (content language, section titles)
 index.md        Catalog of every public wiki page
 videos.md       Suggested videos per article
 CLAUDE.md       Only imports this file. No rules there
@@ -131,9 +130,9 @@ quiz / review ─► mentor ─────────────┴─► lea
 
 | | Tutor | Auditor | Curator | Mentor | Archivist | Main session |
 |---|---|---|---|---|---|---|
-| Runs on | Any question | `lint` | `curate`; approved plans (ingest pages, artifact, video, qa page, promote) | `quiz`, `review` | Sources entering or being filed in `raw/` | Every input from the human: it orchestrates |
+| Runs on | Any question | `lint` | `curate`; approved plans (ingest pages, artifact, video, qa page) | `quiz`, `review` | Sources entering or being filed in `raw/` | Every input from the human: it orchestrates |
 | Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | The material and `raw/` | Agents' reports and their commits |
-| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `videos.md`, `flags/`; framework files for `procedure` flags and promote | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
+| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `videos.md`, `flags/`; framework files for `procedure` flags | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
 | Commits | No | No | Yes | No | Yes | No |
 
 - The tutor answers the human's questions; the mentor quizzes them and
@@ -156,8 +155,7 @@ quiz / review ─► mentor ─────────────┴─► lea
 - No agent runs in the background or on a schedule. Instead, a
   `SessionStart` hook (`session-flags.sh`) reports pending flags when a
   session starts; the main session tells the human at the start of its first
-  reply and offers to process them; the curator only runs once they agree. In a prod repo it also
-  reports pending `procedure` flags in staging.
+  reply and offers to process them; the curator only runs once they agree.
 
 ### Models and delegation
 
@@ -170,7 +168,7 @@ mechanical filing go to Haiku; writing goes to Sonnet:
 |---|---|---|
 | `Explore` | Haiku | Read-only lookups for the main session: which pages, sources or files cover something. Returns paths and short findings |
 | archivist | Haiku | Brings sources into `raw/`, files them, records them in `raw/SOURCES.md` and commits them, without changing their content |
-| curator | Sonnet | Its flags, plus every approved plan that writes (ingest pages, artifact, video, saved qa page, promote): writes, runs the wiki checks and commits |
+| curator | Sonnet | Its flags, plus every approved plan that writes (ingest pages, artifact, video, saved qa page): writes, runs the wiki checks and commits |
 | tutor, auditor, mentor | Sonnet | Their roles above |
 
 - `Explore` must keep that exact name: it replaces Claude Code's built-in
@@ -233,10 +231,8 @@ puts the proposed rule change in `suggestion:`. When the human asks
 directly for a framework change, the main session also raises a
 `procedure` flag with the change in `suggestion:` and hands it to the
 curator; the request counts as approval, so the curator applies and commits
-it, unless it's ambiguous (then `needs-review`). Procedures belong to the
-framework, so the flag goes where the framework is made: in a prod repo, in
-`staging_repo`'s `flags/open/`; otherwise, in this repo. One-off preferences
-that don't generalize aren't flagged.
+it, unless it's ambiguous (then `needs-review`). The flag goes in this repo's
+`flags/open/`. One-off preferences that don't generalize aren't flagged.
 - Flags are the factory's own working knowledge, not the wiki's: everything
   in `flags/open/` and `flags/closed/` is in `.gitignore` and never goes
   into a commit. Never `git add -f` them. Only `flags/TEMPLATE.md` (and the
@@ -305,24 +301,6 @@ up), but private because they reveal what the human asks:
 - Problems inside `wiki/qa/` are reported, not flagged; the main session
   fixes them if the human wants.
 
-## Framework: staging and prod
-
-The framework (schema, agents, hooks, commands) is shared by several repos.
-Each repo says its `role` in `wiki.config.md`:
-
-- **staging** (the public `knowledge-factory` repo): where framework changes
-  are made and tested against its sample content. It holds `framework.txt`,
-  the list of framework files.
-- **prod** (a personal wiki): receives framework changes only through
-  `promote`. Its `wiki.config.md` gives `staging_repo`, the path to staging.
-
-Changes flow one way, staging → prod. In a prod repo, never edit a framework
-file directly: make the change in staging (add it to the session's working
-directories if needed), commit it there, then promote. Everything not listed
-in `framework.txt` (wiki content, `raw/`, `index.md`,
-`videos.md`, flags, `README.md`, `wiki.config.md`, licenses) belongs to each
-repo and is never synced.
-
 ## Operations
 
 The human never types commands and never calls an agent. They write in
@@ -343,7 +321,6 @@ does type one, run it, with no reminder.
 | Asks to add one specific source from `raw/` | Ingest | Main session + archivist + curator |
 | Asks to check the wiki | Lint, then Curate on the new flags | Auditor, curator |
 | Agrees to process pending flags, or approves a proposal in one | Curate (all, or that flag) | Curator |
-| Asks to bring framework changes from staging (prod only) | Promote | Main session + curator |
 
 - If the input fits more than one operation, ask one short question.
 - `<name>` is part of a file name: the human never gives paths or
@@ -539,7 +516,6 @@ duplicates), then a report grouped by type. It checks:
 - `videos.md` entries whose article no longer exists
 - Artifacts whose pages have an `updated` later than the artifact's last
   commit (`git log -1 --format=%cs -- artifacts/<topic>.html`)
-- Prod only: framework files that differ from staging (`promote` pending)
 
 ### Curate
 
@@ -559,12 +535,10 @@ changing tracked files makes no commit (flags are private).
    - `contradiction`, or a fix that deletes or rewrites content: write the
      proposal in the flag, `status: needs-review`; apply it only after the
      human approves (`curate <name>`).
-   - A framework mismatch in prod: don't fix it; tell the human to run
-     `promote`.
-   - `procedure` (staging only): write the concrete change (files and
+   - `procedure`: write the concrete change (files and
      diff) in the flag and set `needs-review`. Once the human approves
      (`curate <name>`), apply it to the framework files, commit them, close
-     the flag, and remind the human to `promote` into prod.
+     the flag.
 4. Closing: `status: closed`, one-line `resolution:`, move to `flags/closed/`.
 5. If tracked files changed, commit them (type `curate`). The flag itself
    is never committed.
@@ -635,20 +609,6 @@ Same as "Artifact rules" and "Artifact visual style", but in
 5. Delete `learner/quiz.md` (the HTML stays) and report: grading, next
    review dates, one line on what changed in the profile.
 
-### Promote
-
-`promote`, in a prod repo only: the main session gets the approval, the
-curator copies and commits.
-
-1. Read `staging_repo` from `wiki.config.md` and `framework.txt` from it.
-   Check staging has no uncommitted changes; note its `HEAD` short hash.
-2. Show the human the diff between each listed file in staging and in prod
-   (new, changed and removed files). If nothing differs, say so and stop.
-3. Wait for approval. Then the curator copies the files, keeping
-   executable bits, and commits.
-4. The commit is `chore(config): promote framework from staging @<hash>` with the
-   staging commit subjects since the last promote in the commit body.
-
 ## index.md format
 
 Grouped by type, alphabetical, one line per page, descriptions in the
@@ -711,12 +671,10 @@ session doesn't commit.
 | Flag closed without a fix, parked or proposed | No commit (flags are private) |
 | `AGENTS.md` / `README.md` | `docs(schema): …`, `docs(readme): …` |
 | Config (`.claude/`, `.obsidian/`, `.gitignore`) | `chore(config): …` |
-| Procedure flag applied (staging) | `docs(schema): resolve procedure flag on gitignore comments` |
-| Promote (prod) | `chore(config): promote framework from staging @abc1234` |
+| Procedure flag applied | `docs(schema): resolve procedure flag on gitignore comments` |
 | Saved qa answer | No commit (private) |
 
 ## Changes to this schema
 
 If a convention isn't working, propose the change; don't edit this file on
-your own. In a prod repo, accepted changes are made in staging and promoted.
-Each accepted change is committed as `docs(schema): …`.
+your own. Each accepted change is committed as `docs(schema): …`.
