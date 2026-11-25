@@ -64,10 +64,15 @@ README.md       Onboarding for humans. Not part of the wiki
 
 - Documentation (`AGENTS.md`, `README.md`, `CLAUDE.md`, `.claude/`): English.
 - Wiki content (pages, `index.md` descriptions, flags, `learner/`,
-  artifacts, flashcards): the `content_language` in `wiki.config.md`. Agents
-  also talk to the human in that language. If `wiki.config.md` allows
-  mixing, section titles and set phrases may stay in English when the
-  English is correct and idiomatic.
+  artifacts, flashcards): the `content_language` in `wiki.config.md`. If
+  `wiki.config.md` allows mixing, section titles and set phrases may stay in
+  English when the English is correct and idiomatic.
+- Conversation: at the start of every session, before anything else, the
+  main session asks the human whether to talk in Spanish or English, and
+  uses that language for the rest of the session (its replies and the
+  agent reports it relays). It passes that language to the subagents in its
+  request; without one, they report in `content_language`. This is
+  independent of `content_language`.
 - Tags, commands and commit messages: always English.
 
 ## Page conventions
@@ -238,7 +243,7 @@ that don't generalize aren't flagged.
   folders' `.gitkeep`) is tracked.
 - Even so, a flag describes the wiki's gap and never quotes the human's
   question, says what they asked, or names a `wiki/qa/` page: its content
-  feeds wiki fixes, and commit messages.
+  feeds wiki fixes and commit messages.
 
 ### Learner store
 
