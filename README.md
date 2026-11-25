@@ -72,10 +72,10 @@ your questions) and stay out of git.
 [Obsidian](https://obsidian.md) is optional but recommended for browsing the
 wiki and its graph.
 
-1. Click **Use this template** (or clone the repo).
+1. Click **Use this template** on GitHub to create your own wiki from this
+   repo. It then evolves on its own: there is no sync with the template.
 2. Edit `wiki.config.md`: set `content_language`, the page section titles
-   and the flashcard labels. Set `role: prod` and `staging_repo` if you also
-   keep a copy of this repo as staging (see below).
+   and the flashcard labels.
 3. Empty the sample content if you want a blank wiki: `wiki/`, `index.md`,
    `raw/SOURCES.md`.
 4. Drop your sources in `raw/` (or hand them over in the chat), run
@@ -104,14 +104,6 @@ No commands: you write in plain words and the main session runs the agents.
 | Your pasted quiz results | The mentor grades them and schedules reviews |
 | "Quiz me", "check the wiki", a video link… | The matching agent runs |
 
-## Staging and prod
-
-Use this repo as **staging** for the framework and keep your real wiki as
-**prod**. Framework changes (schema, agents, hooks, commands — listed in
-`framework.txt`) are made and tested here against the sample content, then
-`promote` copies them into prod after showing you the diff. Changes flow one
-way only, so your wiki never gets a half-finished rule.
-
 ## Structure
 
 ```
@@ -122,8 +114,7 @@ flags/        open/ closed/ (private) TEMPLATE.md
 learner/      Your learning profile (private)
 .claude/      agents/ hooks/ commands/
 AGENTS.md     The schema every agent follows
-wiki.config.md  Settings for this repo (language, role)
-framework.txt   Files shared between staging and prod
+wiki.config.md  Settings for this repo (language, section titles)
 index.md · videos.md
 ```
 
