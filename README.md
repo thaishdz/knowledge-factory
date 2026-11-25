@@ -32,14 +32,13 @@ back. It doesn't write pages or commit itself.
 |---|---|---|---|---|---|
 | Runs when | You ask a question | The wiki gets checked | Flags get fixed, or pages get written | You want a quiz or a review | A source enters `raw/` |
 | Looks at | The pages it needs | The whole wiki | Open flags and `raw/` | The wiki and your profile | Your material and `raw/` |
-| Produces | An answer that cites pages, plus a flag if something's off | Only flags | Fixes, pages, a commit, a log entry | Flashcards, grading, an updated profile | The source filed and listed in `raw/SOURCES.md`, a commit |
+| Produces | An answer that cites pages, plus a flag if something's off | Only flags | Fixes, pages, a commit | Flashcards, grading, an updated profile | The source filed and listed in `raw/SOURCES.md`, a commit |
 | Edits the wiki | No | No | Yes | No | No |
 
 Hooks in `.claude/hooks/` enforce these limits: the tutor, auditor and
 mentor physically can't write outside their folders, the curator can't
 touch your sources, and the archivist can file them but never edit,
-overwrite or delete them. Every change is an unsigned Conventional Commit with a
-matching entry in `log.md`.
+overwrite or delete them. Every change is an unsigned Conventional Commit.
 
 Models are split by job: the main session leads (plans, delegates, reviews
 every commit), `Explore` and the archivist run on Haiku, and the tutor,
@@ -78,7 +77,7 @@ wiki and its graph.
    and the flashcard labels. Set `role: prod` and `staging_repo` if you also
    keep a copy of this repo as staging (see below).
 3. Empty the sample content if you want a blank wiki: `wiki/`, `index.md`,
-   `log.md`, `raw/SOURCES.md`.
+   `raw/SOURCES.md`.
 4. Drop your sources in `raw/` (or hand them over in the chat), run
    `claude` in the repo and say what you want to learn, e.g. "I want to
    learn RAG".
@@ -125,7 +124,7 @@ learner/      Your learning profile (private)
 AGENTS.md     The schema every agent follows
 wiki.config.md  Settings for this repo (language, role)
 framework.txt   Files shared between staging and prod
-index.md · log.md · videos.md
+index.md · videos.md
 ```
 
 ## Sample content
