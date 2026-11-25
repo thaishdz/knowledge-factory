@@ -26,7 +26,7 @@ only job is to close flags using your sources.
 
 | | Tutor | Auditor | Curator | Mentor |
 |---|---|---|---|---|
-| Runs when | You ask a question | You run `lint` | You run `curate` | You run `quiz` or `review` |
+| Runs when | You ask a question | The wiki gets checked | Flags get fixed, or pages get written | You want a quiz or a review |
 | Looks at | The pages it needs | The whole wiki | Open flags and `raw/` | The wiki and your profile |
 | Produces | An answer that cites pages, plus a flag if something's off | Only flags | Fixes, a commit, a log entry | Flashcards, grading, an updated profile |
 | Edits the wiki | No | No | Yes | No |
@@ -75,41 +75,30 @@ wiki and its graph.
 3. Empty the sample content if you want a blank wiki: `wiki/`, `index.md`,
    `log.md`, `raw/SOURCES.md`.
 4. Drop your sources in `raw/` (or hand them over in the chat), run
-   `claude` in the repo and say what you want to learn:
-
-   ```
-   study rag
-   ```
+   `claude` in the repo and say what you want to learn, e.g. "I want to
+   learn RAG".
 
    You approve one plan; then the main session runs every agent: it builds
    the wiki pages, checks them, fixes what it can, makes a visual summary
    and opens a quiz.
-5. Ask questions and paste your quiz results. That's all you need;
-   `/wiki-help` lists the optional shortcuts.
+5. Ask questions and paste your quiz results. That's all; `/wiki-help`
+   shows what you can say and what's pending.
 
 **Obsidian setup (optional):** open the folder as a vault, set *Settings →
 Files and links → Default location for new attachments* to `raw/assets`, and
 bind *Download attachments for current file* to a hotkey (e.g. `Cmd+Shift+D`)
 so web clippings keep their images locally.
 
-## Commands
+## Using it
 
-Only `study`, questions and pasted quiz results are needed; the rest are
-shortcuts for a single step.
+No commands: you write in plain words and the main session runs the agents.
 
-
-| Command | What it does |
+| You write | What happens |
 |---|---|
-| `study <topic>` *(or just say it)* | Plans, then builds the wiki, checks it, makes a summary and a quiz, after one approval |
-| *(a question)* | The tutor answers from the wiki and cites pages |
-| `ingest <name>` | Adds a source from `raw/` to the wiki, after your approval |
-| `video <url> for <name>` | Records a suggested video under an article |
-| `artifact <topic>` | Builds a visual HTML summary of a topic |
-| `lint` | The auditor checks the whole wiki and raises flags |
-| `curate` / `curate <name>` | The curator processes all flags / one flag |
-| `quiz <topic>` / `review` | Flashcards on a topic / what's due today |
-| *(paste `QUIZ RESULTS`)* | The mentor grades the quiz |
-| `promote` | In a prod repo: pulls framework changes from staging |
+| "I want to learn RAG", "here's a RAG course" | One plan to approve, then wiki pages, checks, a visual summary and a quiz |
+| A question | The tutor answers from the wiki and cites pages |
+| Your pasted quiz results | The mentor grades them and schedules reviews |
+| "Quiz me", "check the wiki", a video link… | The matching agent runs |
 
 ## Staging and prod
 

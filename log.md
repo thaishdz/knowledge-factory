@@ -188,3 +188,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] config | chore(config): drop commands from wiki-help and the session hook
 - agent: Claude (Opus 5.5)
 - files: .claude/commands/wiki-help.md, .claude/hooks/session-flags.sh
+
+## [2026-11-25] schema | docs(readme): replace the command list with plain input
+- agent: Claude (Opus 5.5)
+- files: README.md
