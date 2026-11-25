@@ -123,3 +123,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: .claude/agents/Explore.md, .claude/agents/implementer.md, 4 agents in .claude/agents/, .claude/commands/wiki-help.md, framework.txt
 - notes: Explore on Haiku overrides the built-in; implementer and the other agents on Sonnet
+
+## [2026-11-25] schema | docs(readme): describe model routing
+- agent: Claude (Opus 5.5)
+- files: README.md
