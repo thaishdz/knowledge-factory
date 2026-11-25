@@ -29,9 +29,10 @@ learner/        How the human learns. Private: only README.md is tracked
   cards/        HTML flashcards per quiz
 .claude/
   agents/       tutor, auditor, curator, mentor, archivist; Explore
-  hooks/        Write limits per subagent; session-start flag report and welcome; first-prompt onboarding
+  hooks/        Write limits per subagent; session-start flag report and welcome; first-prompt onboarding; prefs.sh (local preferences helper)
   scripts/      reset-wiki.sh and sample-content.txt (Reset operation)
   commands/     Slash commands for the human (/wiki-help)
+  user-prefs.json  Local preferences (language, onboarded). Private: gitignored
 wiki.config.md  Repo-specific settings (content language, section titles)
 index.md        Catalog of every public wiki page
 videos.md       Suggested videos per article
@@ -68,19 +69,19 @@ README.md       Onboarding for humans. Not part of the wiki
   artifacts, flashcards): the `content_language` in `wiki.config.md`. If
   `wiki.config.md` allows mixing, section titles and set phrases may stay in
   English when the English is correct and idiomatic.
-- Conversation: asked once with a menu, not in text. When `.claude/.language`
-  (gitignored, local to the machine, like `.claude/.onboarded`) is missing,
-  the main session calls `AskUserQuestion` before anything else in its first
-  reply (question "Idioma / Language?", options Español and English). A
-  `PostToolUse` hook on `AskUserQuestion` (`remember-language.sh`) saves the
-  answer (`es` or `en`) to that file, whether it came from this menu or from
-  the onboarding menu. From then on the `SessionStart` hook (`session-flags.sh`)
-  tells the main session which language to use and not to ask; the human can
-  ask to switch at any time (the main session shows the menu again and the
-  file is overwritten). The main session uses that language for the rest of
-  the session (its replies and the agent reports it relays) and passes it to
-  the subagents in its request; without one, they report in
-  `content_language`. This is independent of `content_language`.
+- Conversation: asked once with a menu, not in text. When `language` isn't
+  in the local preferences (see "Local preferences"), the main session calls
+  `AskUserQuestion` before anything else in its first reply (question
+  "Idioma / Language?", options Español and English). A `PostToolUse` hook on
+  `AskUserQuestion` (`remember-language.sh`) saves the answer (`es` or `en`),
+  whether it came from this menu or from the onboarding menu. From then on
+  the `SessionStart` hook (`session-flags.sh`) tells the main session which
+  language to use and not to ask; the human can ask to switch at any time
+  (the main session shows the menu again and the value is overwritten). The
+  main session uses that language for the rest of the session (its replies
+  and the agent reports it relays) and passes it to the subagents in its
+  request; without one, they report in `content_language`. This is
+  independent of `content_language`.
 - Tags, commands and commit messages: always English.
 
 ## Page conventions
@@ -165,17 +166,30 @@ quiz / review ─► mentor ─────────────┴─► lea
   `SessionStart` hook (`session-flags.sh`) reports pending flags when a
   session starts; the main session tells the human at the start of its first
   reply and offers to process them; the curator only runs once they agree.
-  On a first run (sample content still present and `.claude/.onboarded`
-  absent, a gitignored marker) the same hook shows the human a welcome at
-  startup (`systemMessage`: "Write anything to start"), because the assistant
-  never speaks first. A `UserPromptSubmit` hook (`onboarding.sh`) then adds
-  the onboarding instruction to the reply to their first message, even if it
-  is a slash command, and only then creates the marker. The instruction is a
-  menu: after one or two lines of welcome, the main session calls
-  `AskUserQuestion` once with the language and what to do first (explore the
-  sample, start their own wiki, or what can I say). The language is asked
-  only there, not separately in text, and only if `.claude/.language` doesn't
-  exist yet (otherwise the menu has just the second question).
+  On a first run (sample content still present and `onboarded` not set in
+  the local preferences) the same hook shows the human a welcome at startup
+  (`systemMessage`: "Write anything to start"), because the assistant never
+  speaks first. A `UserPromptSubmit` hook (`onboarding.sh`) then adds the
+  onboarding instruction to the reply to their first message, even if it is a
+  slash command, and only then sets `onboarded`. The instruction is a menu:
+  after one or two lines of welcome, the main session calls `AskUserQuestion`
+  once with the language and what to do first (explore the sample, start
+  their own wiki, or what can I say). The language is asked only there, not
+  separately in text, and only if `language` isn't set yet (otherwise the
+  menu has just the second question).
+
+### Local preferences
+
+`.claude/user-prefs.json` holds the human's preferences for this machine,
+e.g. `{"language": "es", "onboarded": true}`. Keys: `language` (`es` or
+`en`, the conversation language) and `onboarded` (the first-run menu was
+shown). It is gitignored: local only, never committed. The hooks read it with
+`jq` (a missing or invalid file means no preferences) and every write merges
+with the existing keys through a temp file, so one key never wipes another
+and a corrupt file is replaced. The shared helper is
+`.claude/hooks/prefs.sh`; it also folds the old marker files
+`.claude/.onboarded` and `.claude/.language` into the JSON and deletes them.
+It is not `.claude/settings.local.json`, which belongs to Claude Code.
 
 ### Models and delegation
 
