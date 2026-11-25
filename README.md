@@ -76,8 +76,8 @@ wiki and its graph.
    repo. It then evolves on its own: there is no sync with the template.
 2. Edit `wiki.config.md`: set `content_language`, the page section titles
    and the flashcard labels.
-3. Empty the sample content if you want a blank wiki: `wiki/`, `index.md`,
-   `raw/SOURCES.md`.
+3. For a blank wiki, tell Claude you want to start your own wiki: it shows
+   what will be removed (the sample content), asks you once and empties it.
 4. Drop your sources in `raw/` (or hand them over in the chat), run
    `claude` in the repo and say what you want to learn, e.g. "I want to
    learn RAG".
@@ -128,6 +128,9 @@ The wiki ships with nine pages and four diagrams compiled from two articles:
 The articles themselves aren't included, because their licenses don't allow
 redistribution: they're listed as **link-only** sources in `raw/SOURCES.md`.
 Download them into `raw/articles/` if you want the agents to work with them.
+
+Asking Claude to start your own wiki removes it (`LICENSE-content` stays for
+you to adjust).
 
 ## License
 
