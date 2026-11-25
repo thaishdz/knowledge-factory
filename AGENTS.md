@@ -134,7 +134,7 @@ quiz / review ─► mentor ─────────────┴─► lea
 |---|---|---|---|---|---|---|
 | Runs on | Any question | `lint` | `curate`; approved plans (ingest pages, artifact, video, qa page) and the end of a reset | `quiz`, `review` | Sources entering or being filed in `raw/` | Every input from the human: it orchestrates |
 | Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | The material and `raw/` | Agents' reports and their commits |
-| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `videos.md`, `flags/`; framework files for `procedure` flags | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
+| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `videos.md`, `flags/`; framework files for `procedure` flags; `wiki.config.md` at the end of a reset | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
 | Commits | No | No | Yes | No | Yes | No |
 
 - The tutor answers the human's questions; the mentor quizzes them and
