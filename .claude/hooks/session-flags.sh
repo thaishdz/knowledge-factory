@@ -15,6 +15,7 @@ for f in flags/open/*.md; do
 done
 total=$(( ${#open[@]} + ${#review[@]} + ${#source[@]} ))
 lang="FIRST, before anything else in your first reply, ask the human whether to talk in Spanish or English this session, and use that language for the rest of the session (your replies and the agent reports you relay). Pass that language to subagents in your request."
+langmenu="On this first run do NOT ask the language in plain text: it is asked in the onboarding menu (AskUserQuestion) that you show in your reply to the human's first message. Use the chosen language for the rest of the session and pass it to subagents."
 # First-run welcome: only while sample content is on disk and the marker is absent.
 # The assistant never speaks first, so the welcome goes in a visible systemMessage;
 # the marker is created later by the UserPromptSubmit hook (onboarding.sh).
@@ -24,6 +25,7 @@ if [ ! -e .claude/.onboarded ] && [ -f .claude/scripts/sample-content.txt ]; the
     case "$p" in ''|'#'*) continue ;; esac
     if [ -e "$p" ]; then
       welcome="Welcome! This is a wiki that agents build from your sources; you only write in plain words. Write anything to start (e.g. hello): I'll show you the sample or help you start your own wiki."
+      lang="$langmenu"
       break
     fi
   done < .claude/scripts/sample-content.txt
