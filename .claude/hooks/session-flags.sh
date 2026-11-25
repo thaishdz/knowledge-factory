@@ -25,7 +25,11 @@ if grep -q '^- role: prod' wiki.config.md 2>/dev/null; then
   fi
 fi
 total=$(( ${#open[@]} + ${#review[@]} + ${#source[@]} + ${#staged[@]} ))
-[ "$total" -eq 0 ] && exit 0
+lang="FIRST, before anything else in your first reply, ask the human whether to talk in Spanish or English this session, and use that language for the rest of the session (your replies and the agent reports you relay). Pass that language to subagents in your request."
+if [ "$total" -eq 0 ]; then
+  jq -n --arg ctx "$lang" '{hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'
+  exit 0
+fi
 
 line() { [ "$2" -gt 0 ] && printf '%s %d (%s)' "$1" "$2" "$3"; }
 parts=()
@@ -34,6 +38,6 @@ parts=()
 [ ${#source[@]} -gt 0 ] && parts+=("$(line "needs-source:" ${#source[@]} "need a source in raw/")")
 [ ${#staged[@]} -gt 0 ] && parts+=("$(line "procedure flags in staging:" ${#staged[@]} "pending in staging")")
 joined=$(printf '%s; ' "${parts[@]}"); summary="Pending flags — ${joined%; }"
-detail=$(printf 'Pending flags in flags/open/:\n'; for n in "${open[@]}"; do echo "- open: $n"; done; for n in "${review[@]}"; do echo "- needs-review: $n"; done; for n in "${source[@]}"; do echo "- needs-source: $n"; done; for n in "${staged[@]}"; do echo "- procedure (staging): $n"; done; echo "Tell the human about them at the start of your first reply, in plain words and without commands, and offer to process them. Do not run the curator until they agree.")
+detail=$(printf 'Pending flags in flags/open/:\n'; for n in "${open[@]}"; do echo "- open: $n"; done; for n in "${review[@]}"; do echo "- needs-review: $n"; done; for n in "${source[@]}"; do echo "- needs-source: $n"; done; for n in "${staged[@]}"; do echo "- procedure (staging): $n"; done; echo "$lang"; echo "Then tell the human about the flags, in plain words and without commands, and offer to process them. Do not run the curator until they agree.")
 jq -n --arg msg "$summary" --arg ctx "$detail" \
   '{systemMessage: $msg, hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'

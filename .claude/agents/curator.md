@@ -109,7 +109,7 @@ In plan mode: the commit hash, the files you created or changed (one line
 each), the result of the checks, and anything you left out of the plan and
 why.
 
-In curate mode, a short report in the content language, one line per flag:
+In curate mode, a short report in the conversation language the main session gives in its request (default: the content language), one line per flag:
 - closed: commit hash and which pages you touched;
 - `needs-source`: which source would be needed (it's a question for the human);
 - `needs-review`: the proposed fix, for the human to decide.

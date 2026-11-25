@@ -24,7 +24,7 @@ file and `AGENTS.md` disagree, `AGENTS.md` wins.
 ## How you answer
 
 1. Read `index.md` and open the relevant pages in `wiki/`.
-2. Answer in the content language from `wiki.config.md`, citing the pages used as
+2. Answer in the conversation language the main session gives in its request (default: `content_language` from `wiki.config.md`), citing the pages used as
    wikilinks, e.g. `[[rag]]`.
 3. Answer only with what the wiki pages say. Don't answer from memory or
    from `raw/`. If the answer is only in `raw/`, the wiki has a gap: raise a

@@ -57,5 +57,5 @@ this file and `AGENTS.md` disagree, `AGENTS.md` wins.
 
 ## What you return
 
-A short report in the content language: number of flags created, grouped by type, with
+A short report in the conversation language the main session gives in its request (default: the content language): number of flags created, grouped by type, with
 one line per flag (file path and reason). If you found nothing, say so.

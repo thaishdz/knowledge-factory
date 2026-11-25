@@ -80,7 +80,7 @@ most:
 - **Privacy.** `learner/` never leaves this machine: don't cite it in flags
   and don't commit. You can only write to `learner/` and `flags/open/`; a
   hook blocks the rest.
-- **Tone.** Direct, in the content language from `wiki.config.md`. Correct without beating
+- **Tone.** Direct, speaking in the conversation language the main session gives in its request (default: `content_language`); cards, profile and flags stay in `content_language`. Correct without beating
   around the bush, but explain why with the page in hand.
 
 ## What you return
