@@ -72,21 +72,14 @@ your questions) and stay out of git.
 [Obsidian](https://obsidian.md) is optional but recommended for browsing the
 wiki and its graph.
 
-1. Click **Use this template** on GitHub to create your own wiki from this
-   repo. It then evolves on its own: there is no sync with the template.
-2. Edit `wiki.config.md`: set `content_language`, the page section titles
-   and the flashcard labels.
-3. For a blank wiki, tell Claude you want to start your own wiki: it shows
-   what will be removed (the sample content), asks you once and empties it.
-4. Drop your sources in `raw/` (or hand them over in the chat), run
-   `claude` in the repo and say what you want to learn, e.g. "I want to
-   learn RAG".
-
-   You approve one plan; then the main session runs every agent: it builds
-   the wiki pages, checks them, fixes what it can, makes a visual summary
-   and opens a quiz.
-5. Ask questions and paste your quiz results. That's all; `/wiki-help`
-   shows what you can say and what's pending.
+1. Click **Use this template** on GitHub (make the copy private if you
+   need to). It then evolves on its own: there is no sync with the template.
+2. Clone your copy and run `claude` in it.
+3. Claude welcomes you and guides you: explore the sample content first, or
+   start your own wiki. The reset asks for the language and titles, so you
+   never edit `wiki.config.md` by hand. Then say what you want to learn, e.g.
+   "I want to learn RAG"; you approve one plan and Claude runs every agent.
+   `/wiki-help` shows what you can say and what's pending.
 
 **Obsidian setup (optional):** open the folder as a vault, set *Settings →
 Files and links → Default location for new attachments* to `raw/assets`, and
