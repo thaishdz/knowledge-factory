@@ -201,3 +201,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] config | chore(config): add archivist agent and hand plan commits to the curator
 - agent: Claude (Opus 5.5)
 - files: .claude/agents/archivist.md, .claude/hooks/guard-archivist.sh, .claude/agents/curator.md, .claude/commands/promote.md, framework.txt
+
+## [2026-11-25] schema | docs(readme): describe the archivist and the orchestrating main session
+- agent: Claude (Opus 5.5)
+- files: README.md

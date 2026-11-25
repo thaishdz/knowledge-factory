@@ -24,21 +24,26 @@ only job is to close flags using your sources.
 
 ## The agents
 
-| | Tutor | Auditor | Curator | Mentor |
-|---|---|---|---|---|
-| Runs when | You ask a question | The wiki gets checked | Flags get fixed, or pages get written | You want a quiz or a review |
-| Looks at | The pages it needs | The whole wiki | Open flags and `raw/` | The wiki and your profile |
-| Produces | An answer that cites pages, plus a flag if something's off | Only flags | Fixes, a commit, a log entry | Flashcards, grading, an updated profile |
-| Edits the wiki | No | No | Yes | No |
+You only talk to the main session. It orchestrates: it plans, gets your
+approval, hands each task to its agent, reviews every commit and reports
+back. It doesn't write pages or commit itself.
+
+| | Tutor | Auditor | Curator | Mentor | Archivist |
+|---|---|---|---|---|---|
+| Runs when | You ask a question | The wiki gets checked | Flags get fixed, or pages get written | You want a quiz or a review | A source enters `raw/` |
+| Looks at | The pages it needs | The whole wiki | Open flags and `raw/` | The wiki and your profile | Your material and `raw/` |
+| Produces | An answer that cites pages, plus a flag if something's off | Only flags | Fixes, pages, a commit, a log entry | Flashcards, grading, an updated profile | The source filed and listed in `raw/SOURCES.md`, a commit |
+| Edits the wiki | No | No | Yes | No | No |
 
 Hooks in `.claude/hooks/` enforce these limits: the tutor, auditor and
-mentor physically can't write outside their folders, and the curator can't
-touch your sources. Every change is an unsigned Conventional Commit with a
+mentor physically can't write outside their folders, the curator can't
+touch your sources, and the archivist can file them but never edit,
+overwrite or delete them. Every change is an unsigned Conventional Commit with a
 matching entry in `log.md`.
 
-Models are split by job: the main session leads (plans, reviews every
-change, commits), `Explore` searches on Haiku, and the
-four agents above write on Sonnet. See "Models and delegation" in
+Models are split by job: the main session leads (plans, delegates, reviews
+every commit), `Explore` and the archivist run on Haiku, and the tutor,
+auditor, curator and mentor on Sonnet. See "Models and delegation" in
 `AGENTS.md`.
 
 ## Learning with the mentor
