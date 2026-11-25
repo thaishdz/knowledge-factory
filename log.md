@@ -109,3 +109,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] config | chore(config): rename librarian agent to consultant
 - agent: Claude (Opus 5.5)
 - files: .claude/agents/consultant.md (from librarian.md), .claude/agents/curator.md, .claude/commands/wiki-help.md, flags/TEMPLATE.md, learner/README.md, framework.txt
+
+## [2026-11-25] schema | docs(readme): rename librarian to consultant
+- agent: Claude (Opus 5.5)
+- files: README.md, docs/loop.svg
