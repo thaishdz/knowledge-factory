@@ -1,5 +1,5 @@
 #!/bin/bash
-# SessionStart hook: report pending flags so the human decides when to curate.
+# SessionStart hook: report pending flags so the main session can offer to process them.
 # Read-only: it never runs an agent or changes a file.
 root="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 cd "$root" 2>/dev/null || exit 0
@@ -29,11 +29,11 @@ total=$(( ${#open[@]} + ${#review[@]} + ${#source[@]} + ${#staged[@]} ))
 
 line() { [ "$2" -gt 0 ] && printf '%s %d (%s)' "$1" "$2" "$3"; }
 parts=()
-[ ${#open[@]} -gt 0 ]   && parts+=("$(line "open:" ${#open[@]} "run curate")")
-[ ${#review[@]} -gt 0 ] && parts+=("$(line "needs-review:" ${#review[@]} "approve with curate <name>")")
-[ ${#source[@]} -gt 0 ] && parts+=("$(line "needs-source:" ${#source[@]} "add a source, then ingest")")
-[ ${#staged[@]} -gt 0 ] && parts+=("$(line "procedure flags in staging:" ${#staged[@]} "curate them there, then promote")")
+[ ${#open[@]} -gt 0 ]   && parts+=("$(line "open:" ${#open[@]} "I can fix them")")
+[ ${#review[@]} -gt 0 ] && parts+=("$(line "needs-review:" ${#review[@]} "waiting for your approval")")
+[ ${#source[@]} -gt 0 ] && parts+=("$(line "needs-source:" ${#source[@]} "need a source in raw/")")
+[ ${#staged[@]} -gt 0 ] && parts+=("$(line "procedure flags in staging:" ${#staged[@]} "pending in staging")")
 joined=$(printf '%s; ' "${parts[@]}"); summary="Pending flags — ${joined%; }"
-detail=$(printf 'Pending flags in flags/open/:\n'; for n in "${open[@]}"; do echo "- open: $n"; done; for n in "${review[@]}"; do echo "- needs-review: $n"; done; for n in "${source[@]}"; do echo "- needs-source: $n"; done; for n in "${staged[@]}"; do echo "- procedure (staging): $n"; done; echo "Tell the human about them at the start of your first reply, in the content language. Do not run curate unless they ask.")
+detail=$(printf 'Pending flags in flags/open/:\n'; for n in "${open[@]}"; do echo "- open: $n"; done; for n in "${review[@]}"; do echo "- needs-review: $n"; done; for n in "${source[@]}"; do echo "- needs-source: $n"; done; for n in "${staged[@]}"; do echo "- procedure (staging): $n"; done; echo "Tell the human about them at the start of your first reply, in plain words and without commands, and offer to process them. Do not run the curator until they agree.")
 jq -n --arg msg "$summary" --arg ctx "$detail" \
   '{systemMessage: $msg, hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'

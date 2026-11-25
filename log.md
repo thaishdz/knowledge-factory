@@ -184,3 +184,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: the human never types commands; the main session picks the operation and offers pending flags in plain words
+
+## [2026-11-25] config | chore(config): drop commands from wiki-help and the session hook
+- agent: Claude (Opus 5.5)
+- files: .claude/commands/wiki-help.md, .claude/hooks/session-flags.sh

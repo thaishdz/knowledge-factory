@@ -1,10 +1,10 @@
 ---
-description: Cheat sheet of the wiki commands and state of pending flags
+description: What you can say to the wiki, and what's pending
 allowed-tools: Bash(grep:*), Bash(ls:*)
 ---
 
-Show the human the cheat sheet below exactly as written, without adding
-explanations or running any wiki command. Then add a "Status" section with a
+Show the human the guide below exactly as written, without adding
+explanations or running any operation. Then add a "Status" section with a
 one-line summary per pending flag, based on this listing (if it's empty, say
 "No pending flags"):
 
@@ -22,55 +22,25 @@ it's empty, say nothing.
 
 ---
 
-## Wiki cheat sheet
+## How to use the wiki
 
-**You only need three things:**
-1. **Name a topic or hand over material**: "I want to learn RAG", "here's a
-   RAG course" (or `study <topic>`). I show you one plan; once you approve
-   it, I run every agent: build the wiki, check it, make a visual summary
-   and a quiz.
-2. **Ask anything** about what you're learning.
-3. **Paste the `QUIZ RESULTS`** when you finish the cards.
+Just write. No commands, no agents to call: I work out what you need and
+run the agents myself.
 
-Everything below is optional: shortcuts to run a single step.
-
-**Ask the wiki** → *tutor* (answers your questions; the *mentor* quizzes you)
-- Type the question as-is. It answers only from the wiki, cites the pages
-  and raises a flag if something is missing or doesn't add up.
-
-**Learn** → *mentor*
-| Command | What it does |
+| You write | What happens |
 |---|---|
-| `quiz <topic>` | HTML flashcards on a wiki topic (opens in the browser) |
-| `review` | HTML flashcards for what's due today |
-| *(paste `QUIZ RESULTS`)* | When you finish the cards: click the copy-results button and paste it here. The mentor grades and updates your profile |
-- Your profile, traces and cards live in `learner/`; saved answers, in `wiki/qa/`. Both are private and never go into git.
-- If a question repeats, the mentor will suggest saving it in `wiki/qa/`.
+| "I want to learn RAG", "here's a RAG course" | I show you one plan. Once you approve it, I build the wiki pages, check them, make a visual summary and open a quiz |
+| Any question | Answered only from the wiki, citing the pages. If something's missing, I note the gap |
+| The `QUIZ RESULTS` you copied from the cards | Graded; your next reviews are scheduled |
+| "Quiz me on X", "what's due today?" | New flashcards |
+| A video link | Saved under the article it goes with |
+| "Check the wiki" | Reviewed for errors; I fix what the sources allow |
+| "Yes" to a pending proposal | Applied and committed |
 
-**Sources and content** → *main session*
-| Command | What it does |
-|---|---|
-| `ingest <name>` | Adds a source from `raw/` to the wiki |
-| `video <url> for <name>` | Records a video under an article, no questions asked |
-| `video <url>` | Same, but suggests the article |
-| `artifact <topic>` | Generates a visual summary in HTML |
-- The main session plans and reviews; the *curator* (Sonnet) writes the approved plan and *Explore* (Haiku) does the lookups.
+**Pending items** (I tell you when a session starts)
+- Gaps I can fix → I'll offer; say yes.
+- Waiting for your approval → I'll show the proposal; say yes or no.
+- Needs a source → add one to `raw/` (or hand it to me) and tell me.
 
-**Maintenance** → *auditor* and *curator*
-| Command | Who | What it does |
-|---|---|---|
-| `lint` | auditor | Reviews the whole wiki and raises flags. Fixes nothing |
-| `curate` | curator | Processes every open flag: fixes, parks or proposes |
-| `curate <name>` | curator | Processes a single flag (e.g. after adding a source or approving a proposal) |
-| `promote` | main session | Prod only: brings framework changes from the staging repo, after showing the diff |
-
-**Flag states**
-- `open` → run `curate`
-- `needs-source` → add a source to `raw/`, run `ingest`, then `curate <name>`
-- `needs-review` → read the proposal in the flag and approve it with `curate <name>`
-- `closed` → if the wiki changed, review the commit with `git show`
-- Flags are private: they stay on your machine and never go into git
-- `procedure` flags (raised when you correct how an agent works) live in the staging repo → `curate` there, approve, then `promote`
-- Any flag may carry a `suggestion:` with the proposed fix
-
-<name> = part of the file name, no path or extension. Full rules in `AGENTS.md`.
+Your profile, quiz cards, saved answers and flags stay on your machine and
+never go into git. Full rules in `AGENTS.md`.
