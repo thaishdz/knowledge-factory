@@ -192,3 +192,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] schema | docs(readme): replace the command list with plain input
 - agent: Claude (Opus 5.5)
 - files: README.md
+
+## [2026-11-25] schema | docs(schema): add archivist and make the main session orchestrate only
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: archivist files sources in raw/; curator commits every plan it writes; the main session plans, delegates, reviews and reports

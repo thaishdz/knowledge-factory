@@ -28,7 +28,7 @@ learner/        How the human learns. Private: only README.md is tracked
   quiz.md       Quiz waiting to be graded (only while one is open)
   cards/        HTML flashcards per quiz
 .claude/
-  agents/       tutor, auditor, curator, mentor; Explore
+  agents/       tutor, auditor, curator, mentor, archivist; Explore
   hooks/        Write limits per subagent; session-start flag report
   commands/     Slash commands for the human (/wiki-help, /promote)
 wiki.config.md  Repo-specific settings (role, content language). Never synced
@@ -124,26 +124,30 @@ quiz / review ─► mentor ─────────────┴─► lea
 
 ### Roles
 
-| | Tutor | Auditor | Curator | Mentor | Main session |
-|---|---|---|---|---|---|
-| Runs on | Any question | `lint` | `curate`; approved plans from the main session | `quiz`, `review` | `study`, `ingest`, `video`, `artifact`, `promote` |
-| Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | Depends |
-| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/`; framework files for approved `procedure` flags (staging) | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/open/` (procedure), framework files |
-| Commits | No | No | Yes (`curate` only) | No | Yes |
+| | Tutor | Auditor | Curator | Mentor | Archivist | Main session |
+|---|---|---|---|---|---|---|
+| Runs on | Any question | `lint` | `curate`; approved plans (ingest pages, artifact, video, qa page, promote) | `quiz`, `review` | Sources entering or being filed in `raw/` | Every input from the human: it orchestrates |
+| Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | The material and `raw/` | Agents' reports and their commits |
+| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/`; framework files for `procedure` flags and promote | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `log.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
+| Commits | No | No | Yes | No | Yes | No |
 
 - The tutor answers the human's questions; the mentor quizzes them and
   tracks how they learn. Neither edits the wiki.
 - The tutor finds problems in passing (mostly `missing`); the auditor
   reviews everything (mostly structure). The curator closes duplicates.
-- The main session delegates to the right subagent and relays its report.
-  Operations that need the human's approval halfway (study, ingest,
-  video, artifact, promote) stay in the main session: a subagent can't ask
-  while it works. In Study the main session runs the whole chain and the
-  human only approves the plan.
+- The main session only orchestrates: it talks to the human, writes the
+  plans they approve, hands each task to its agent, reviews what comes back
+  (`git show` on each commit) and reports. It doesn't write pages, move
+  sources or commit. If a commit is wrong, it sends the fix back to the
+  agent that made it.
+- Approvals stay with the main session, because a subagent can't ask while
+  it works: it asks the human, then delegates. In Study the human only
+  approves the plan.
 - Each subagent reads this file and `wiki.config.md` first. Hooks in
-  `.claude/hooks/` enforce the "Writes to" row and block the curator from
-  `raw/`. The auditor has `Bash` for `git log`, so for it the limit is
-  partly an instruction.
+  `.claude/hooks/` enforce the "Writes to" row, block the curator from
+  `raw/` and stop the archivist from deleting, editing or overwriting
+  sources. The auditor's and archivist's `Bash` checks are pattern-based,
+  so for them the limit is partly an instruction.
 - No agent runs in the background or on a schedule. Instead, a
   `SessionStart` hook (`session-flags.sh`) reports pending flags when a
   session starts; the main session tells the human at the start of its first
@@ -153,23 +157,23 @@ quiz / review ─► mentor ─────────────┴─► lea
 ### Models and delegation
 
 The main session is the lead and runs on the session's model. It owns
-quality, the conventions in this file and privacy: it writes the plans the
-human approves, delegates the work, reviews every change (`git diff`)
-before committing, and makes the commits. Reading and exploring go to
-Haiku; writing goes to Sonnet:
+quality, the conventions in this file and privacy, and only orchestrates:
+plans, delegates, reviews every commit and reports. Reading, exploring and
+mechanical filing go to Haiku; writing goes to Sonnet:
 
 | Agent | Model | Does |
 |---|---|---|
 | `Explore` | Haiku | Read-only lookups for the main session: which pages, sources or files cover something. Returns paths and short findings |
-| curator | Sonnet | Its flags, plus the writing of approved plans (ingest pages, artifact, saved qa page): writes, runs the wiki checks and leaves the commit to the main session |
+| archivist | Haiku | Brings sources into `raw/`, files them, records them in `raw/SOURCES.md` and commits them, without changing their content |
+| curator | Sonnet | Its flags, plus every approved plan that writes (ingest pages, artifact, video, saved qa page, promote): writes, runs the wiki checks and commits |
 | tutor, auditor, mentor | Sonnet | Their roles above |
 
 - `Explore` must keep that exact name: it replaces Claude Code's built-in
   `Explore`, which runs on the session's model.
 - Models are set in each agent's `model:` frontmatter.
-- The main session doesn't write what a subagent can. It steps in only when
-  a Sonnet agent goes in circles or can't get past an obstacle, and says
-  so to the human.
+- The main session doesn't do what an agent can. It steps in only when an
+  agent goes in circles or can't get past an obstacle, and says so to the
+  human.
 
 ### Where to look for what
 
@@ -220,7 +224,11 @@ convention, a step, a format, something to stop doing — the main session
 raises a `procedure` flag (`raised_by: main`) right away, says so in one
 line and carries on with the corrected behavior. The flag states the
 procedure in general terms, never the conversation or personal details, and
-puts the proposed rule change in `suggestion:`. Procedures belong to the
+puts the proposed rule change in `suggestion:`. When the human asks
+directly for a framework change, the main session also raises a
+`procedure` flag with the change in `suggestion:` and hands it to the
+curator; the request counts as approval, so the curator applies and commits
+it, unless it's ambiguous (then `needs-review`). Procedures belong to the
 framework, so the flag goes where the framework is made: in a prod repo, in
 `staging_repo`'s `flags/open/`; otherwise, in this repo. One-off preferences
 that don't generalize aren't flagged.
@@ -287,7 +295,7 @@ up), but private because they reveal what the human asks:
   `index.md`. Public pages don't link to them; they may link to public pages.
 - The mentor proposes one when the trace shows the same question or gap at
   least twice; if the human accepts, the main session has the curator
-  write it.
+  write it (no commit: it's private).
 - If the answer needs something the wiki lacks, a `missing` flag comes first.
 - Problems inside `wiki/qa/` are reported, not flagged; the main session
   fixes them if the human wants.
@@ -321,16 +329,16 @@ does type one, run it, with no reminder.
 
 | What the human writes | Operation | Who |
 |---|---|---|
-| A topic to learn, or material (a file, a folder, a course) | Study | Main session, orchestrating every agent |
+| A topic to learn, or material (a file, a folder, a course) | Study | Main session orchestrating Explore, archivist, curator, auditor, mentor |
 | A question about what they're learning | Query | Tutor |
 | A pasted `QUIZ RESULTS` block | Quiz grading | Mentor |
-| A video link, with or without the article it goes with | Video | Main session |
+| A video link, with or without the article it goes with | Video | Main session + curator |
 | Asks to be quizzed, or what's due for review | Quiz / review | Mentor |
 | Asks for a visual summary of a topic | Artifact | Main session + curator |
-| Asks to add one specific source from `raw/` | Ingest | Main session + curator |
+| Asks to add one specific source from `raw/` | Ingest | Main session + archivist + curator |
 | Asks to check the wiki | Lint, then Curate on the new flags | Auditor, curator |
 | Agrees to process pending flags, or approves a proposal in one | Curate (all, or that flag) | Curator |
-| Asks to bring framework changes from staging (prod only) | Promote | Main session |
+| Asks to bring framework changes from staging (prod only) | Promote | Main session + curator |
 
 - If the input fits more than one operation, ask one short question.
 - `<name>` is part of a file name: the human never gives paths or
@@ -348,8 +356,8 @@ The human writes "I want to learn RAG" or "here's a RAG course". One
 approval, at the plan; after that the main session runs to the end without
 asking, and only stops if something blocks the whole topic.
 
-1. **Scope.** If the human hands over material (a file or folder), copy it
-   unchanged into the root of `raw/`; a URL can't be saved as-is, so ask the
+1. **Scope.** If the human hands over material (a file or folder), the
+   archivist copies it unchanged into the root of `raw/`; a URL can't be saved as-is, so ask the
    human to save it in `raw/` (e.g. with Obsidian's web clipper). Then use
    `Explore` to find the sources in `raw/` on the topic, which of them have
    no ingest in `log.md`, and what `index.md` and `wiki/` already cover.
@@ -360,17 +368,17 @@ asking, and only stops if something blocks the whole topic.
    the pages each one creates or updates, the artifact and its sections,
    the size of the quiz, and what the sources won't cover. Wait for the
    human's approval; changes to the plan are made now.
-3. **Build.** For each source, in order: move it to its category and list
-   it in `raw/SOURCES.md` (commit `docs(raw): …`), hand its part of the plan
-   to the curator (plan mode), review the diff, and commit the ingest with
-   its `log.md` entry. This replaces the questions and the approval of
+3. **Build.** For each source, in order: the archivist files it in its
+   category, records it in `raw/SOURCES.md` and commits it; the curator
+   (plan mode) writes its part of the plan and commits the ingest. The main
+   session reviews each commit and sends fixes back. This replaces the questions and the approval of
    Ingest steps 1–4. Remote images that need Obsidian go to the final
    report; don't stop for them.
 4. **Check.** Run the auditor (`lint`), then the curator (`curate`) on the
    flags it raised. `needs-source` and `needs-review` flags wait for the
    human: list them in the final report, don't stop.
 5. **Study material.** If the plan includes an artifact, the curator writes
-   it (plan mode), the main session reviews and commits it. Then the mentor
+   and commits it (plan mode); the main session reviews it. Then the mentor
    builds the quiz on the topic and the main session opens the cards.
 6. **Report.** In a few lines: what the wiki learned (pages and commits),
    what's still missing and which source would fill it, anything waiting
@@ -388,9 +396,10 @@ the final report instead of a question.
    name contains `<name>`, case-insensitive. One: say which. Several: ask.
    None: say so and list the sources without an ingest in `log.md`.
 2. If it's in the root of `raw/`, ask its category (`article`, `paper`,
-   `repo`), suggesting the likeliest, and move it. If it's already in a
-   category folder, don't ask. Make sure `raw/SOURCES.md` lists it, with
-   its license; if it can't be redistributed, mark it link-only (rule 8).
+   `repo`), suggesting the likeliest. If it's already in a category folder,
+   don't ask. The archivist files it, makes sure `raw/SOURCES.md` lists it
+   with its license (link-only if it can't be redistributed, rule 8) and
+   commits that.
 3. Read it whole, then any images in `raw/assets/` it references. If images
    are still remote URLs, ask the human to press `Cmd+Shift+D` in Obsidian
    ("Download attachments for current file"); you can't. After a move,
@@ -400,9 +409,9 @@ the final report instead of a question.
 5. Read `index.md` and the related pages.
 6. Delegate to the curator, passing the approved summary as its plan:
    create the new pages the source justifies; update affected pages (info,
-   `sources`, `updated`); add cross-links both ways; update `index.md`.
-   Review its changes and checks before committing.
-7. Commit (source first, then pages), each commit with its `log.md` entry.
+   `sources`, `updated`); add cross-links both ways; update `index.md`;
+   run the checks and commit with the `log.md` entry.
+7. Review the commit (`git show`) and send any fix back to the curator.
 
 ### Video
 
@@ -417,7 +426,7 @@ always come from the human; don't search for others.
    (`https://www.youtube.com/oembed?url=<url>&format=json`: `title`,
    `author_name`) with a generic `User-Agent`. Otherwise ask. Never invent.
    Duration only if the human gives it.
-3. Add it under the article in `videos.md` and commit.
+3. The curator adds it under the article in `videos.md` and commits.
 
 `video <url>`: get title and channel, suggest up to three articles (most
 likely first, one line why each), wait for the choice, then step 3.
@@ -432,9 +441,9 @@ from the wiki and regenerable at any time. Not a source or a wiki page.
 2. Say which pages you'll use and which sections it'll have. Wait for
    approval.
 3. Delegate to the curator with the approved pages and sections: it
-   writes `artifacts/<topic-in-kebab-case>.html` (overwrite if it exists)
-   and adds it to the "Artifacts" section of `index.md`.
-4. Review the artifact against the rules below and commit.
+   writes `artifacts/<topic-in-kebab-case>.html` (overwrite if it exists),
+   adds it to the "Artifacts" section of `index.md` and commits.
+4. Review the artifact against the rules below; send fixes back.
 
 #### Artifact rules
 
@@ -622,14 +631,16 @@ Same as "Artifact rules" and "Artifact visual style", but in
 
 ### Promote
 
-`promote`, in a prod repo only, run by the main session.
+`promote`, in a prod repo only: the main session gets the approval, the
+curator copies and commits.
 
 1. Read `staging_repo` from `wiki.config.md` and `framework.txt` from it.
    Check staging has no uncommitted changes; note its `HEAD` short hash.
 2. Show the human the diff between each listed file in staging and in prod
    (new, changed and removed files). If nothing differs, say so and stop.
-3. Wait for approval. Then copy the files, keeping executable bits.
-4. Commit `chore(config): promote framework from staging @<hash>` with its
+3. Wait for approval. Then the curator copies the files, keeping
+   executable bits, and commits.
+4. The commit is `chore(config): promote framework from staging @<hash>` with its
    `log.md` entry (type `config`, `notes:` the staging commit subjects since
    the last promote).
 
@@ -695,8 +706,9 @@ Use `tail` or `grep` on `log.md`; don't read it whole.
 
 ## Commits
 
-Made by the main session and the curator at the end of each operation; the
-human reviews with `git show`.
+Made by the curator and the archivist at the end of each task; the main
+session reviews each one with `git show`, and so can the human. The main
+session doesn't commit.
 
 - Conventional Commits, `type(scope): description`, English, imperative,
   lowercase.
