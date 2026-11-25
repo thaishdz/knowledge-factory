@@ -37,7 +37,7 @@ this file and `AGENTS.md` disagree, `AGENTS.md` wins.
      sources, `videos.md` with missing articles, public pages linking to
      `wiki/qa/`.
    `wiki/qa/` is private: it doesn't go in `index.md`, so its absence there
-   is not an error. Flags end up in git, so they never name a qa page
+   is not an error. Flags never name a qa page
    (neither its path nor its topic). Problems inside `wiki/qa/` don't become
    flags: report them only in your report. If a public page links to a qa
    page, the flag says "link to a private page" without naming it.

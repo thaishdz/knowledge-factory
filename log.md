@@ -145,3 +145,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: flags are the factory's working knowledge and stay out of git; only wiki fixes are committed
+
+## [2026-11-25] config | chore(config): ignore flags in git and stop committing them
+- agent: Claude (Opus 5.5)
+- files: .gitignore, .claude/agents/curator.md, .claude/agents/tutor.md, .claude/agents/auditor.md, .claude/agents/mentor.md, .claude/commands/wiki-help.md

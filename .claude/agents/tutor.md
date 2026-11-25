@@ -49,8 +49,7 @@ file and `AGENTS.md` disagree, `AGENTS.md` wins.
   the format of `flags/TEMPLATE.md`: `raised_by: tutor`, `status: open`
   and today's date. If you know the fix (e.g. which source in `raw/` seems
   to cover it), put it in `suggestion:`. The flag body is written in the content language and describes the
-  wiki's gap. Flags end up in git: never quote the human's question or say
-  what they asked. The question goes only in the private trace.
+  wiki's gap. Never quote the human's question or say what they asked. The question goes only in the private trace.
 - You can only write to `flags/open/` and `learner/trace/`. A hook blocks any
   other path. If it blocks you, don't try another way.
 - Don't commit or touch `log.md`.

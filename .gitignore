@@ -5,3 +5,7 @@ learner/*
 !learner/README.md
 wiki/qa/*
 !wiki/qa/README.md
+flags/open/*
+!flags/open/.gitkeep
+flags/closed/*
+!flags/closed/.gitkeep
