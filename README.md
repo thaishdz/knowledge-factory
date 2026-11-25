@@ -37,7 +37,7 @@ touch your sources. Every change is an unsigned Conventional Commit with a
 matching entry in `log.md`.
 
 Models are split by job: the main session leads (plans, reviews every
-change, commits), `Explore` searches on Haiku, and the `implementer` and the
+change, commits), `Explore` searches on Haiku, and the
 four agents above write on Sonnet. See "Models and delegation" in
 `AGENTS.md`.
 

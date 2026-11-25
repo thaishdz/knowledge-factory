@@ -162,3 +162,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] config | chore(config): merge implementer agent into curator
 - agent: Claude (Opus 5.5)
 - files: .claude/agents/curator.md, .claude/agents/implementer.md (removed), .claude/commands/wiki-help.md, framework.txt
+
+## [2026-11-25] schema | docs(readme): drop implementer from model routing
+- agent: Claude (Opus 5.5)
+- files: README.md
