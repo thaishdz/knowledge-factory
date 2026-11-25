@@ -68,12 +68,19 @@ README.md       Onboarding for humans. Not part of the wiki
   artifacts, flashcards): the `content_language` in `wiki.config.md`. If
   `wiki.config.md` allows mixing, section titles and set phrases may stay in
   English when the English is correct and idiomatic.
-- Conversation: at the start of every session, before anything else, the
-  main session asks the human whether to talk in Spanish or English, and
-  uses that language for the rest of the session (its replies and the
-  agent reports it relays). It passes that language to the subagents in its
-  request; without one, they report in `content_language`. This is
-  independent of `content_language`.
+- Conversation: asked once with a menu, not in text. When `.claude/.language`
+  (gitignored, local to the machine, like `.claude/.onboarded`) is missing,
+  the main session calls `AskUserQuestion` before anything else in its first
+  reply (question "Idioma / Language?", options Español and English). A
+  `PostToolUse` hook on `AskUserQuestion` (`remember-language.sh`) saves the
+  answer (`es` or `en`) to that file, whether it came from this menu or from
+  the onboarding menu. From then on the `SessionStart` hook (`session-flags.sh`)
+  tells the main session which language to use and not to ask; the human can
+  ask to switch at any time (the main session shows the menu again and the
+  file is overwritten). The main session uses that language for the rest of
+  the session (its replies and the agent reports it relays) and passes it to
+  the subagents in its request; without one, they report in
+  `content_language`. This is independent of `content_language`.
 - Tags, commands and commit messages: always English.
 
 ## Page conventions
@@ -167,7 +174,8 @@ quiz / review ─► mentor ─────────────┴─► lea
   menu: after one or two lines of welcome, the main session calls
   `AskUserQuestion` once with the language and what to do first (explore the
   sample, start their own wiki, or what can I say). The language is asked
-  only there, not separately in text.
+  only there, not separately in text, and only if `.claude/.language` doesn't
+  exist yet (otherwise the menu has just the second question).
 
 ### Models and delegation
 
