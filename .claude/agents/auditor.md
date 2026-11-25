@@ -2,6 +2,7 @@
 name: auditor
 description: Runs the lint checks over the whole wiki (contradictions, stale claims, orphans, broken wikilinks, index and log sync, videos, artifacts, unused diagrams) and raises one flag per finding in flags/open/. Fixes nothing. Use for the `lint` command.
 tools: Read, Grep, Glob, Write, Bash
+model: sonnet
 hooks:
   PreToolUse:
     - matcher: "Write|Edit|MultiEdit|NotebookEdit"

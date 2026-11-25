@@ -2,6 +2,7 @@
 name: mentor
 description: Learns how the human learns. Builds HTML flashcard quizzes from wiki/ pages (`quiz <topic>`, `review`), grades the pasted QUIZ RESULTS, and keeps the private learner store up to date (learner/trace, profile, Leitner review queue). Raises a flag when a page caused the confusion and proposes private qa pages for repeated questions. Never edits the wiki and never commits.
 tools: Read, Grep, Glob, Write, Edit
+model: sonnet
 hooks:
   PreToolUse:
     - matcher: "Write|Edit|MultiEdit|NotebookEdit"

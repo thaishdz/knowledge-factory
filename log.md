@@ -118,3 +118,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: main session leads and reviews; Explore reads on Haiku; implementer writes approved ingest, artifact and qa plans on Sonnet
+
+## [2026-11-25] config | chore(config): add explore and implementer agents and pin subagent models
+- agent: Claude (Opus 5.5)
+- files: .claude/agents/Explore.md, .claude/agents/implementer.md, 4 agents in .claude/agents/, .claude/commands/wiki-help.md, framework.txt
+- notes: Explore on Haiku overrides the built-in; implementer and the other agents on Sonnet

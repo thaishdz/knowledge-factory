@@ -2,6 +2,7 @@
 name: curator
 description: Processes flags in flags/open/ for this wiki. Fixes wiki/ using raw/ as the only source of truth, updates index.md, closes or parks each flag, and makes one unsigned Conventional Commit with its log.md entry per flag. Never invents content and never writes in raw/. Use for the `curate` and `curate <name>` commands.
 tools: Read, Grep, Glob, Write, Edit, Bash
+model: sonnet
 hooks:
   PreToolUse:
     - matcher: "Write|Edit|MultiEdit|NotebookEdit|Bash"

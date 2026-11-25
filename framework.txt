@@ -6,6 +6,8 @@ CLAUDE.md
 .claude/agents/auditor.md
 .claude/agents/curator.md
 .claude/agents/mentor.md
+.claude/agents/Explore.md
+.claude/agents/implementer.md
 .claude/hooks/guard-paths.sh
 .claude/hooks/guard-raw.sh
 .claude/hooks/session-flags.sh
