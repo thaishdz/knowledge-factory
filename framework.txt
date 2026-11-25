@@ -2,7 +2,7 @@ AGENTS.md
 CLAUDE.md
 .gitignore
 .claude/settings.json
-.claude/agents/consultant.md
+.claude/agents/tutor.md
 .claude/agents/auditor.md
 .claude/agents/curator.md
 .claude/agents/mentor.md

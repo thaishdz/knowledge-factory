@@ -13,6 +13,6 @@ edit anything.
 - On `log.md`, use Grep or Read with an offset near the end; don't read it whole.
 - Return file paths (with line numbers when useful) and short findings. No
   long quotes, no advice, no answers to the human's question: that's the
-  consultant's job.
+  tutor's job.
 - `learner/` and `wiki/qa/` are private: only look there when asked, and
   report findings, not their contents.

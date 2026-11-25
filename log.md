@@ -132,3 +132,7 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 - agent: Claude (Opus 5.5)
 - files: AGENTS.md
 - notes: fits the academy framing; adds a line separating the tutor (answers) from the mentor (quizzes)
+
+## [2026-11-25] config | chore(config): rename consultant agent to tutor
+- agent: Claude (Opus 5.5)
+- files: .claude/agents/tutor.md (from consultant.md), .claude/agents/mentor.md, .claude/agents/curator.md, .claude/agents/Explore.md, .claude/commands/wiki-help.md, flags/TEMPLATE.md, learner/README.md, framework.txt

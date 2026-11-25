@@ -1,7 +1,7 @@
 ---
 type: missing          # missing | contradiction | stale | broken-link | orphan | structure | procedure
 page: wiki/topics/example.md   # optional: leave empty if no page is affected
-raised_by: consultant  # consultant | auditor | mentor | main
+raised_by: tutor       # tutor | auditor | mentor | main
 raised: YYYY-MM-DD
 status: open           # open | needs-source | needs-review | closed
 suggestion: ""         # optional: the fix you propose
