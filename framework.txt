@@ -7,8 +7,10 @@ CLAUDE.md
 .claude/agents/curator.md
 .claude/agents/mentor.md
 .claude/agents/Explore.md
+.claude/agents/archivist.md
 .claude/hooks/guard-paths.sh
 .claude/hooks/guard-raw.sh
+.claude/hooks/guard-archivist.sh
 .claude/hooks/session-flags.sh
 .claude/commands/wiki-help.md
 .claude/commands/promote.md

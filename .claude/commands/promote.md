@@ -12,7 +12,8 @@ Run the "Promote" operation from `AGENTS.md`:
 3. For every listed path, compare staging and this repo (new, changed and
    removed files) and show the human a short summary plus the diff.
 4. If nothing differs, say so and stop. Otherwise wait for approval.
-5. Copy the files, keeping executable bits, and commit
+5. Hand the copy to the curator: it copies the files, keeping executable
+   bits, and commits
    `chore(config): promote framework from staging @<hash>` with its
    `log.md` entry (type `config`, `notes:` the staging commit subjects since
-   the last promote).
+   the last promote). Review its commit and report.
