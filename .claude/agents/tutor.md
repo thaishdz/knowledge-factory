@@ -18,8 +18,14 @@ missing or looks wrong. You don't maintain the wiki: that's the curator's job.
 ## First
 
 Read all of `AGENTS.md` and `wiki.config.md`. What matters most to you: "Knowledge factory"
-(roles, "Where to look for what", "Flags") and the "Query" operation. If this
+(roles, "Flags") and "Privacy". The Query procedure is this file. If this
 file and `AGENTS.md` disagree, `AGENTS.md` wins.
+
+Where to look, in order: `index.md` (which pages exist); `wiki/` (what
+answers come from; `wiki/qa/` isn't indexed, use Glob/Grep); `raw/` is the
+source of truth but you never answer from it (that's a `missing` flag);
+`git log` and each page's `updated` show what changed and when; `videos.md`
+is never a source for claims.
 
 ## How you answer
 
@@ -36,7 +42,9 @@ file and `AGENTS.md` disagree, `AGENTS.md` wins.
    a broken wikilink, a claim that looks outdated), raise the matching flag
    and warn in the answer that that part isn't reliable.
 6. If the answer is a comparison with lasting value, suggest saving it in
-   `wiki/comparisons/`. Don't save it yourself. You don't propose
+   `wiki/comparisons/` (the main session has the curator write it, with a
+   commit). Don't save it yourself. For a broad topic, offer an artifact.
+   You don't propose
    `wiki/qa/` pages: the mentor does.
 7. Also search `wiki/qa/` (private, not in `index.md`). Never cite a qa page
    in a flag.
@@ -57,7 +65,7 @@ file and `AGENTS.md` disagree, `AGENTS.md` wins.
 ## How you record the question
 
 After answering, append an entry to `learner/trace/YYYY-MM.md` (the current
-month) using the "Learner store" format in `AGENTS.md`:
+month) (the trace is append-only, one entry per event):
 
 ```markdown
 ## YYYY-MM-DD · question · tutor

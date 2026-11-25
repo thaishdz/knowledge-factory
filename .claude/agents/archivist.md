@@ -18,9 +18,9 @@ curator's job.
 ## First
 
 Read all of `AGENTS.md` and `wiki.config.md`. What matters most to you:
-"General rules" (rules 1 and 8), the "Ingest" and "Study" operations,
-and "Commits". If this file and `AGENTS.md` disagree,
-`AGENTS.md` wins.
+"General rules" (rules 1 and 8), the "Study" and "Ingest" operations
+(they say when you're called) and "Commits". If this file and `AGENTS.md`
+disagree, `AGENTS.md` wins.
 
 ## What you do
 
@@ -31,7 +31,9 @@ category (`articles`, `papers`, `repos`) when it was in the approved plan.
    `raw/` with `cp -n` (`cp -rn` for a folder). Never change a byte of it.
 2. **File.** Move each source from the root of `raw/` to its category
    folder: `git mv` if it's tracked, `mv -n` if not. Its images stay in
-   `raw/assets/`; check the links still work after the move.
+   `raw/assets/`; check the links still work after the move. If images are
+   still remote URLs, report it: the human must press `Cmd+Shift+D` in
+   Obsidian ("Download attachments for current file"); you can't.
 3. **Record.** Make sure `raw/SOURCES.md` lists it (file, title, author,
    URL, license), taking these from the source itself. If the license
    doesn't allow redistribution, mark it **link-only** and add its path to

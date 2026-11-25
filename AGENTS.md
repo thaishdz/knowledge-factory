@@ -3,7 +3,9 @@
 An LLM Wiki (Karpathy's pattern) run as a knowledge factory. The human
 curates `raw/`, asks questions and reviews changes; the agents write
 everything else, each in its own area. Read this whole file and
-`wiki.config.md` before any operation.
+`wiki.config.md` before any operation, then your own file in
+`.claude/agents/`, which holds the detailed procedures you run. If the two
+disagree, this file wins.
 
 ## Structure
 
@@ -120,6 +122,32 @@ A 2–3 sentence summary.
 ## <sources>
 ```
 
+- `index.md`: grouped by type, alphabetical, one line per page, descriptions
+  in the content language; `wiki/qa/` is never listed; artifacts have their
+  own section with the path:
+
+  ```markdown
+  ## Topics
+  - [[vector-database]] — Database that indexes embeddings for similarity search
+
+  ## Artifacts
+  - `artifacts/rag.html` — Visual summary of RAG
+  ```
+
+- `videos.md`: one block per article, alphabetical by path, one line per
+  video, duration optional:
+
+  ```markdown
+  ## raw/articles/file-name.md
+  - [Video title](https://...) — channel, duration
+  ```
+
+- `wiki/qa/` answers (`type: qa`) follow the same conventions but are
+  private: only its `README.md` is tracked, they are never committed or
+  indexed, public pages don't link to them (they may link to public pages),
+  and problems inside them are reported, not flagged. The mentor proposes
+  them (see `.claude/agents/mentor.md`).
+
 ## Knowledge factory
 
 Many agent failures come from missing knowledge, not a bad model. So
@@ -153,15 +181,16 @@ quiz / review ─► mentor ─────────────┴─► lea
   plans they approve, hands each task to its agent, reviews what comes back
   (`git show` on each commit) and reports. It doesn't write pages, move
   sources or commit. If a commit is wrong, it sends the fix back to the
-  agent that made it.
+  agent that made it. It steps in only when an agent goes in circles or
+  can't get past an obstacle, and says so to the human.
 - Approvals stay with the main session, because a subagent can't ask while
   it works: it asks the human, then delegates. In Study the human only
   approves the plan.
-- Each subagent reads this file and `wiki.config.md` first. Hooks in
-  `.claude/hooks/` enforce the "Writes to" row, block the curator from
-  `raw/` and stop the archivist from deleting, editing or overwriting
-  sources. The auditor's and archivist's `Bash` checks are pattern-based,
-  so for them the limit is partly an instruction.
+- Each subagent reads this file, `wiki.config.md` and its own file in
+  `.claude/agents/`. Hooks in `.claude/hooks/` enforce the "Writes to" row,
+  block the curator from `raw/` and stop the archivist from deleting,
+  editing or overwriting sources. The auditor's and archivist's `Bash`
+  checks are pattern-based, so for them the limit is partly an instruction.
 - No agent runs in the background or on a schedule. Instead, a
   `SessionStart` hook (`session-flags.sh`) reports pending flags when a
   session starts; the main session tells the human at the start of its first
@@ -194,33 +223,16 @@ It is not `.claude/settings.local.json`, which belongs to Claude Code.
 ### Models and delegation
 
 The main session is the lead and runs on the session's model. It owns
-quality, the conventions in this file and privacy, and only orchestrates:
-plans, delegates, reviews every commit and reports. Reading, exploring and
-mechanical filing go to Haiku; writing goes to Sonnet:
+quality, the conventions in this file and privacy. Reading, exploring and
+mechanical filing go to Haiku; writing goes to Sonnet. Models are set in
+each agent's `model:` frontmatter.
 
 | Agent | Model | Does |
 |---|---|---|
-| `Explore` | Haiku | Read-only lookups for the main session: which pages, sources or files cover something. Returns paths and short findings |
+| `Explore` | Haiku | Read-only lookups for the main session: which pages, sources or files cover something. Returns paths and short findings. It must keep that exact name: it replaces Claude Code's built-in `Explore`, which runs on the session's model |
 | archivist | Haiku | Brings sources into `raw/`, files them, records them in `raw/SOURCES.md` and commits them, without changing their content |
 | curator | Sonnet | Its flags, plus every approved plan that writes (ingest pages, artifact, video, saved qa page): writes, runs the wiki checks and commits |
 | tutor, auditor, mentor | Sonnet | Their roles above |
-
-- `Explore` must keep that exact name: it replaces Claude Code's built-in
-  `Explore`, which runs on the session's model.
-- Models are set in each agent's `model:` frontmatter.
-- The main session doesn't do what an agent can. It steps in only when an
-  agent goes in circles or can't get past an obstacle, and says so to the
-  human.
-
-### Where to look for what
-
-1. `index.md` first: which pages exist and what they cover.
-2. `wiki/`: what answers come from. `wiki/qa/` isn't in the index: use
-   Glob/Grep.
-3. `raw/`: source of truth. The tutor never answers from it (that's a
-   `missing` flag); the curator uses it to fix the wiki.
-4. `git log` and each page's `updated`: what changed and when.
-5. `videos.md`: never a source for claims.
 
 ### Flags
 
@@ -255,6 +267,13 @@ Short description of the gap or problem.
   The curator treats it as a lead, never as a source: it still checks
   `raw/`.
 - Check `flags/open/` for duplicates first.
+- Flags are the factory's own working knowledge, not the wiki's: everything
+  in `flags/open/` and `flags/closed/` is in `.gitignore` and never goes
+  into a commit. Never `git add -f` them. Only `flags/TEMPLATE.md` (and the
+  folders' `.gitkeep`) is tracked.
+- A flag describes the wiki's gap and never quotes the human's question,
+  says what they asked, or names a `wiki/qa/` page: its content feeds wiki
+  fixes and commit messages.
 
 **Procedure flags.** When the human corrects *how* something is done — a
 convention, a step, a format, something to stop doing — the main session
@@ -267,73 +286,6 @@ directly for a framework change, the main session also raises a
 curator; the request counts as approval, so the curator applies and commits
 it, unless it's ambiguous (then `needs-review`). The flag goes in this repo's
 `flags/open/`. One-off preferences that don't generalize aren't flagged.
-- Flags are the factory's own working knowledge, not the wiki's: everything
-  in `flags/open/` and `flags/closed/` is in `.gitignore` and never goes
-  into a commit. Never `git add -f` them. Only `flags/TEMPLATE.md` (and the
-  folders' `.gitkeep`) is tracked.
-- Even so, a flag describes the wiki's gap and never quotes the human's
-  question, says what they asked, or names a `wiki/qa/` page: its content
-  feeds wiki fixes and commit messages.
-
-### Learner store
-
-`learner/` holds how the human learns, compiled like `raw/` → `wiki/`.
-
-**Privacy.** Everything in it except `README.md` is in `.gitignore`: it
-never goes into a commit, a wiki page, an artifact, a flag or an
-external service. Never `git add -f` it.
-
-**`trace/YYYY-MM.md`** (L1). Append-only. One entry per event:
-
-```markdown
-## 2026-11-24 · question · tutor
-- q: "How is an LLM Wiki different from RAG?"
-- pages: [[rag]], [[llm-wiki]]
-- gap: missing (flags/open/2026-11-24-missing-example.md)
-
-## 2026-11-24 · quiz · mentor
-- concept: [[rag]]
-- q: "When are the embeddings generated in RAG?"
-- a: "at query time"
-- result: wrong       # right | partial | wrong | skipped
-- note: mixes up ingest time and query time
-```
-
-**`profile.md`** (L2). Facts under "Interests", "Strengths", "Struggles"
-and "Learns best with". Each cites its trace entries (date and type); a fact
-with one piece of evidence is marked as a hypothesis. Contradicted facts are
-corrected and the change recorded.
-
-**`review.md`**. One row per concept (wiki page):
-
-```markdown
-| Concept | Box | Next review | Last result |
-|---|---|---|---|
-| [[rag]] | 1 | 2026-11-25 | wrong |
-```
-
-Leitner intervals: box 1 → 1 day, 2 → 3, 3 → 7, 4 → 14, 5 → 30. `right`
-moves up a box (max 5), `partial` stays, `wrong` goes back to box 1. This is
-a convention of this wiki, not from any source.
-
-**`quiz.md`**: the pending quiz's cards (id, type, question, expected
-answer, page); deleted after grading. **`cards/<slug>.html`**: the
-flashcards (see "Quiz").
-
-### Private QA
-
-`wiki/qa/` holds answers that combine several pages and aren't fully in any
-one. Same page conventions (`type: qa`, sources from `raw/`, nothing made
-up), but private because they reveal what the human asks:
-
-- Only `README.md` is tracked: no commit, not in
-  `index.md`. Public pages don't link to them; they may link to public pages.
-- The mentor proposes one when the trace shows the same question or gap at
-  least twice; if the human accepts, the main session has the curator
-  write it (no commit: it's private).
-- If the answer needs something the wiki lacks, a `missing` flag comes first.
-- Problems inside `wiki/qa/` are reported, not flagged; the main session
-  fixes them if the human wants.
 
 ## Operations
 
@@ -344,28 +296,34 @@ operation names below (`study`, `ingest`, `curate`…) are internal: they
 name the procedures in this file and the agents' instructions. If the human
 does type one, run it, with no reminder.
 
-| What the human writes | Operation | Who |
-|---|---|---|
-| A topic to learn, or material (a file, a folder, a course) | Study | Main session orchestrating Explore, archivist, curator, auditor, mentor |
-| Wants to start their own wiki, or to clear the sample content | Reset | Main session + curator |
-| A question about what they're learning | Query | Tutor |
-| A pasted `QUIZ RESULTS` block | Quiz grading | Mentor |
-| A video link, with or without the article it goes with | Video | Main session + curator |
-| Asks to be quizzed, or what's due for review | Quiz / review | Mentor |
-| Asks for a visual summary of a topic | Artifact | Main session + curator |
-| Asks to add one specific source from `raw/` | Ingest | Main session + archivist + curator |
-| Asks to check the wiki | Lint, then Curate on the new flags | Auditor, curator |
-| Agrees to process pending flags, or approves a proposal in one | Curate (all, or that flag) | Curator |
+| What the human writes | Operation | Who | Detail in |
+|---|---|---|---|
+| A topic to learn, or material (a file, a folder, a course) | Study | Main session orchestrating Explore, archivist, curator, auditor, mentor | below |
+| Wants to start their own wiki, or to clear the sample content | Reset | Main session + curator | below |
+| A question about what they're learning | Query | Tutor | `tutor.md` |
+| A pasted `QUIZ RESULTS` block | Quiz grading | Mentor | `mentor.md` |
+| A video link, with or without the article it goes with | Video | Main session + curator | below |
+| Asks to be quizzed, or what's due for review | Quiz / review | Mentor | `mentor.md` |
+| Asks for a visual summary of a topic | Artifact | Main session + curator | below; `curator.md` |
+| Asks to add one specific source from `raw/` | Ingest | Main session + archivist + curator | below; `archivist.md`, `curator.md` |
+| Asks to check the wiki | Lint, then Curate on the new flags | Auditor, curator | `auditor.md`, `curator.md` |
+| Agrees to process pending flags, or approves a proposal in one | Curate (all, or that flag) | Curator | `curator.md` |
 
 - If the input fits more than one operation, ask one short question.
 - `<name>` is part of a file name: the human never gives paths or
   extensions.
 - Pending flags and reviews due today are offered in plain words ("there
   are 2 gaps I can fix, shall I?"), never as a command to type.
-
-`/wiki-help` (`.claude/commands/wiki-help.md`) shows the human what they can
-say and what's pending. If operations, roles or flag states change, update
-it too.
+- Query: the main session passes the question as-is and relays the answer.
+  For a comparison with lasting value the tutor suggests saving it in
+  `wiki/comparisons/`; for a broad topic, it offers an artifact; `wiki/qa/`
+  pages are the mentor's call (and, if accepted, the main session has the
+  curator write them: no commit, they're private).
+- Quiz: the mentor writes `learner/cards/<slug>.html`; the main session
+  runs `open learner/cards/<slug>.html`.
+- `/wiki-help` (`.claude/commands/wiki-help.md`) shows the human what they
+  can say and what's pending. If operations, roles or flag states change,
+  update it too.
 
 ### Study
 
@@ -374,13 +332,13 @@ approval, at the plan; after that the main session runs to the end without
 asking, and only stops if something blocks the whole topic.
 
 1. **Scope.** If the human hands over material (a file or folder), the
-   archivist copies it unchanged into the root of `raw/`; a URL can't be saved as-is, so ask the
-   human to save it in `raw/` (e.g. with Obsidian's web clipper). Then use
-   `Explore` to find the sources in `raw/` on the topic, which of them have
-   no ingest commit in `git log` (e.g. `git log --oneline --grep ingest`),
-   and what `index.md` and `wiki/` already cover.
-   If `raw/` has nothing on the topic and the wiki doesn't cover it, say
-   which kind of source would be needed and stop.
+   archivist copies it unchanged into the root of `raw/`; a URL can't be
+   saved as-is, so ask the human to save it in `raw/` (e.g. with Obsidian's
+   web clipper). Then use `Explore` to find the sources in `raw/` on the
+   topic, which of them have no ingest commit in `git log` (e.g.
+   `git log --oneline --grep ingest`), and what `index.md` and `wiki/`
+   already cover. If `raw/` has nothing on the topic and the wiki doesn't
+   cover it, say which kind of source would be needed and stop.
 2. **Plan (the only approval).** Show in a few lines: the sources to ingest
    (with the category for those in the root and whether each is link-only),
    the pages each one creates or updates, the artifact and its sections,
@@ -389,9 +347,9 @@ asking, and only stops if something blocks the whole topic.
 3. **Build.** For each source, in order: the archivist files it in its
    category, records it in `raw/SOURCES.md` and commits it; the curator
    (plan mode) writes its part of the plan and commits the ingest. The main
-   session reviews each commit and sends fixes back. This replaces the questions and the approval of
-   Ingest steps 1–4. Remote images that need Obsidian go to the final
-   report; don't stop for them.
+   session reviews each commit and sends fixes back. This replaces the
+   questions and the approval of Ingest steps 1–4. Remote images that need
+   Obsidian go to the final report; don't stop for them.
 4. **Check.** Run the auditor (`lint`), then the curator (`curate`) on the
    flags it raised. `needs-source` and `needs-review` flags wait for the
    human: list them in the final report, don't stop.
@@ -426,10 +384,8 @@ the final report instead of a question.
 4. Summarize the key points and the pages you'll create or touch. Wait for
    approval.
 5. Read `index.md` and the related pages.
-6. Delegate to the curator, passing the approved summary as its plan:
-   create the new pages the source justifies; update affected pages (info,
-   `sources`, `updated`); add cross-links both ways; update `index.md`;
-   run the checks and commit.
+6. Delegate to the curator, passing the approved summary as its plan (what
+   it does with it is in `curator.md`).
 7. Review the commit (`git show`) and send any fix back to the curator.
 
 ### Video
@@ -452,197 +408,17 @@ likely first, one line why each), wait for the choice, then step 3.
 
 ### Artifact
 
-`artifact <topic>`. An HTML page that summarizes a topic visually, generated
-from the wiki and regenerable at any time. Not a source or a wiki page.
+`artifact <topic>`: an HTML page that summarizes a topic visually,
+generated from the wiki and regenerable at any time; not a source or a wiki
+page.
 
 1. Read `index.md` and the topic's pages. If the wiki doesn't cover it, say
    so and stop.
 2. Say which pages you'll use and which sections it'll have. Wait for
    approval.
-3. Delegate to the curator with the approved pages and sections: it
-   writes `artifacts/<topic-in-kebab-case>.html` (overwrite if it exists),
-   adds it to the "Artifacts" section of `index.md` and commits.
-4. Review the artifact against the rules below; send fixes back.
-
-#### Artifact rules
-
-- One file, CSS and JS inline. No CDNs, external fonts or requests, except
-  embedded videos.
-- Diagrams in inline SVG.
-- Content only from wiki pages. Missing info goes into the wiki first.
-- Videos: embed those `videos.md` lists for the articles in the used pages'
-  `sources`, no others. YouTube via
-  `<iframe src="https://www.youtube-nocookie.com/embed/<id>">` with the
-  regular link below; other sites, link only.
-- End with a list of the wiki pages used. No generation date or other
-  timestamp: git keeps it.
-- Same language conventions as pages.
-
-#### Artifact visual style
-
-Reference: https://thariqs.github.io/html-effectiveness/ (warm paper, serif
-headlines, monospace details, one accent color). Follow these rules, not
-its content or exact layout.
-
-```css
-:root {
-  --ivory:  #FAF9F5;  /* page background */
-  --paper:  #FFFFFF;  /* card background */
-  --slate:  #141413;  /* main text */
-  --clay:   #D97757;  /* accent: links, numbers, emphasis */
-  --clay-d: #B85C3E;  /* dark accent */
-  --oat:    #E3DACC;  /* soft fill */
-  --olive:  #788C5D;  /* second color, diagrams and states only */
-  --g100:   #F0EEE6;
-  --g200:   #E6E3DA;
-  --g300:   #D1CFC5;  /* borders */
-  --g500:   #87867F;  /* secondary text */
-  --g700:   #3D3D3A;  /* paragraph text */
-  --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
-  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
-}
-```
-
-- Only these colors, via the variables. System fonts only.
-- Type: serif headlines, weight 500, slightly negative tracking; sans body,
-  line height 1.55; small mono for labels, counters, dates and file names.
-- Header: small uppercase spaced mono label with a short clay dash; large
-  serif title with the key word in clay italics; lede in `--g700`.
-- Navigation: rounded bordered pills linking to sections, if several.
-- Sections: mono clay number (01, 02…) next to the serif title.
-- Cards: `--paper`, 1.5px `--g300` border, 14px radius, no shadow at rest;
-  on hover they lift, gain a soft shadow and the border turns `--slate`.
-- Layout: centered column up to 1120px, generous spacing, responsive card
-  grid, good on mobile.
-- SVG: 2.5px round-cap strokes in `--g500`; fills `--g300`, `--oat`,
-  `--paper`; `--clay` only for emphasis.
-- Embedded videos: inside a card, 16:9, rounded corners.
-- No dark mode, loud gradients or emoji icons.
-
-### Query
-
-Done by the tutor; the main session passes the question as-is and
-relays the answer.
-
-1. Read `index.md` and the relevant pages (including `wiki/qa/`).
-2. Answer citing the pages used. Never from memory or from `raw/`.
-3. If the wiki lacks the answer, say so and raise a `missing` flag that
-   describes the gap.
-4. If something looks off (contradiction, broken link, outdated claim),
-   raise the matching flag and warn that that part isn't reliable.
-5. For a comparison with lasting value, suggest saving it in
-   `wiki/comparisons/` (the main session does it, with a commit). For a
-   broad topic, offer an artifact. `wiki/qa/` pages are the mentor's call.
-6. Append the question, pages used and any flag to `learner/trace/`.
-   Facts only; interpreting is the mentor's job.
-
-### Lint
-
-Done by the auditor, which fixes nothing: one flag per finding (no
-duplicates), then a report grouped by type. It checks:
-
-- Contradictions between pages; claims superseded by newer sources
-- Orphan pages (except `wiki/qa/`); broken wikilinks; unembedded diagrams
-- Concepts mentioned several times without a page
-- Pages missing from `index.md` or index entries without a page
-  (`wiki/qa/` is never indexed); public pages linking to `wiki/qa/`
-- Pages without `sources`; sources missing from `raw/SOURCES.md`
-- `videos.md` entries whose article no longer exists
-- Artifacts whose pages have an `updated` later than the artifact's last
-  commit (`git log -1 --format=%cs -- artifacts/<topic>.html`)
-
-### Curate
-
-Done by the curator: `curate` (every `open` flag) or `curate <name>` (one
-flag, any state). One flag = one fix. A fix that changes tracked files is
-one commit; closing, parking or proposing without
-changing tracked files makes no commit (flags are private).
-
-1. Read the flag (including any `suggestion:`), the affected page and
-   related pages.
-2. If the problem is gone or duplicated, close it explaining why.
-3. Look in `raw/` (read-only) for what's needed:
-   - Covered: fix the wiki following the page conventions (pages, sources,
-     `updated`, cross-links, `index.md`, diagrams) and close the flag.
-   - Not covered: `status: needs-source`, explain what source is needed,
-     invent nothing.
-   - `contradiction`, or a fix that deletes or rewrites content: write the
-     proposal in the flag, `status: needs-review`; apply it only after the
-     human approves (`curate <name>`).
-   - `procedure`: write the concrete change (files and
-     diff) in the flag and set `needs-review`. Once the human approves
-     (`curate <name>`), apply it to the framework files, commit them, close
-     the flag.
-4. Closing: `status: closed`, one-line `resolution:`, move to `flags/closed/`.
-5. If tracked files changed, commit them (type `curate`). The flag itself
-   is never committed.
-6. Report: closed flags, `needs-source` with the source needed,
-   `needs-review` with the proposal.
-
-### Quiz
-
-Done by the mentor. A subagent can't converse and a local page can't write
-to disk, so the loop closes by copy and paste:
-
-```
-quiz / review ─► mentor ─► learner/cards/<slug>.html ─► the human practices
-learner/ updated ◄── mentor grades ◄── the human pastes "QUIZ RESULTS"
-```
-
-**Step 1: generate** (`quiz <topic>` or `review`).
-
-1. Read `learner/profile.md` and `learner/review.md` (may not exist yet).
-2. Pick concepts: for `quiz <topic>`, the wiki pages on it (including
-   `wiki/qa/`; if none, say so and stop); for `review`, concepts due today or
-   earlier (if none, say so).
-3. Write 4–8 cards from those pages' text only, choosing formats by page and
-   profile (focus on "Struggles", favor "Learns best with"):
-   `flashcard` (front/back, self-graded), `cloze` (sentence with a gap,
-   typed then self-graded), `explain` (own words, graded by the mentor),
-   `compare` (X vs Y, self-graded).
-4. Write `learner/cards/<slug>.html` (topic in kebab-case, or `review`) and
-   the cards in `learner/quiz.md`. A new quiz replaces a pending one (warn).
-5. Return the path; the main session runs `open learner/cards/<slug>.html`.
-
-#### Flashcard HTML rules
-
-Same as "Artifact rules" and "Artifact visual style", but in
-`learner/cards/`, not indexed and without videos. Labels come from
-`flashcard_labels` in `wiki.config.md`. Also:
-
-- One card at a time with a counter (`3/6`). After revealing, the answer
-  cites its page. Three self-grade buttons map to `right`, `partial` and
-  `wrong`.
-- The copy reminder appears only in a final step after the last card: the
-  copy-results button plus a line saying to paste the results in the
-  Claude Code chat, or the mentor learns nothing from the session. No fixed
-  notice or bar. Keep a `beforeunload` warning if nothing was copied.
-- Copy via clipboard; if it fails (e.g. on `file://`), show the text
-  selected in a box.
-- No profile data in the page. Exact copied format, keywords always in
-  English (unanswered = `skipped`):
-
-  ```
-  QUIZ RESULTS · <slug> · YYYY-MM-DD
-  1 | flashcard | [[rag]] | right
-  2 | explain | [[rag]] | answer: "what the human wrote"
-  3 | cloze | [[llm-wiki]] | partial | answer: "what they wrote"
-  ```
-
-**Step 2: grade** (the human pastes `QUIZ RESULTS`, or skips: all `skipped`).
-
-1. Match against `learner/quiz.md`. Keep self-grades; grade `explain` (and
-   `cloze` whose self-grade doesn't fit the answer) against the page:
-   `right`, `partial` or `wrong`, briefly explained.
-2. Append one trace entry per card; update `review.md` (a concept's worst
-   card counts) and `profile.md` (only what the trace supports).
-3. If a page caused the mistake (confusing, incomplete, contradictory), raise
-   a flag about the page, never the human.
-4. If the same question or gap appears at least twice, propose a `wiki/qa/`
-   page.
-5. Delete `learner/quiz.md` (the HTML stays) and report: grading, next
-   review dates, one line on what changed in the profile.
+3. Delegate to the curator with the approved pages and sections (the rules
+   and visual style are in `curator.md`).
+4. Review the artifact against those rules; send fixes back.
 
 ### Reset
 
@@ -670,30 +446,6 @@ onboarding hook asks for on a first run.
    empty and they can say what they want to learn. It reminds them to check
    `LICENSE-content`, which covered the sample content.
 
-## index.md format
-
-Grouped by type, alphabetical, one line per page, descriptions in the
-content language. `wiki/qa/` is never listed. Artifacts get their own
-section with the path:
-
-```markdown
-## Topics
-- [[vector-database]] — Database that indexes embeddings for similarity search
-
-## Artifacts
-- `artifacts/rag.html` — Visual summary of RAG
-```
-
-## videos.md format
-
-One block per article, alphabetical by path, one line per video, duration
-optional:
-
-```markdown
-## raw/articles/file-name.md
-- [Video title](https://...) — channel, duration
-```
-
 ## Privacy
 
 - Never send the human's personal email to an external service (`User-Agent`,
@@ -702,7 +454,8 @@ optional:
 - Never write their email in wiki pages or commit messages.
   Public repos commit with the GitHub `noreply` address.
 - Nothing from `learner/` or `wiki/qa/` leaves the machine: not in
-  searches, commits, artifacts or flags.
+  searches, commits, artifacts, flashcards or flags. Everything in
+  `learner/` except `README.md` is in `.gitignore`; never `git add -f` it.
 - Flags stay on the machine too: they're never committed or pushed.
 
 ## Commits

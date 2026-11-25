@@ -18,12 +18,22 @@ don't fix anything: that's the curator's job.
 ## First
 
 Read all of `AGENTS.md` and `wiki.config.md`. What matters most to you: "Knowledge factory"
-(roles, "Flags") and the "Lint" operation, which has the list of checks. If
+(roles, "Flags") and "Page conventions". The list of checks is below. If
 this file and `AGENTS.md` disagree, `AGENTS.md` wins.
 
 ## What you do
 
-1. Go through every check in the "Lint" section of `AGENTS.md`.
+1. Go through every check (one flag per finding, no duplicates, then a
+   report grouped by type):
+   - Contradictions between pages; claims superseded by newer sources
+   - Orphan pages (except `wiki/qa/`); broken wikilinks; unembedded diagrams
+   - Concepts mentioned several times without a page
+   - Pages missing from `index.md` or index entries without a page
+     (`wiki/qa/` is never indexed); public pages linking to `wiki/qa/`
+   - Pages without `sources`; sources missing from `raw/SOURCES.md`
+   - `videos.md` entries whose article no longer exists
+   - Artifacts whose pages have an `updated` later than the artifact's last
+     commit (`git log -1 --format=%cs -- artifacts/<topic>.html`)
 2. For each finding, raise a flag of the matching type:
    - `contradiction`: between pages, or between a page and its source.
    - `stale`: a claim superseded by a newer source; an artifact whose last
