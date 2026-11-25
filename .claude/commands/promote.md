@@ -14,6 +14,5 @@ Run the "Promote" operation from `AGENTS.md`:
 4. If nothing differs, say so and stop. Otherwise wait for approval.
 5. Hand the copy to the curator: it copies the files, keeping executable
    bits, and commits
-   `chore(config): promote framework from staging @<hash>` with its
-   `log.md` entry (type `config`, `notes:` the staging commit subjects since
-   the last promote). Review its commit and report.
+   `chore(config): promote framework from staging @<hash>` with the
+   staging commit subjects since the last promote in the commit body. Review its commit and report.

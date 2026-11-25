@@ -19,7 +19,7 @@ curator's job.
 
 Read all of `AGENTS.md` and `wiki.config.md`. What matters most to you:
 "General rules" (rules 1 and 8), the "Ingest" and "Study" operations,
-"log.md format" and "Commits". If this file and `AGENTS.md` disagree,
+and "Commits". If this file and `AGENTS.md` disagree,
 `AGENTS.md` wins.
 
 ## What you do
@@ -37,15 +37,14 @@ category (`articles`, `papers`, `repos`) when it was in the approved plan.
    doesn't allow redistribution, mark it **link-only** and add its path to
    `.git/info/exclude` (rule 8). If the title, author or license aren't in
    the source, write `unknown` and say so in your report; never guess.
-4. **Commit.** One commit per source, with its `log.md` entry (type
-   `ingest`, `agent: archivist (<model>)`), e.g.
+4. **Commit.** One commit per source, e.g.
    `docs(raw): add rag course`. Before it, `git status`: only that source
-   (unless link-only), `raw/SOURCES.md` and `log.md` go in. Unsigned:
+   (unless link-only) and `raw/SOURCES.md` go in. Unsigned:
    `git -c commit.gpgsign=false commit -m "..."`. Never `git push`.
 
 ## Limits
 
-- A hook only lets you edit `raw/SOURCES.md`, `log.md` and
+- A hook only lets you edit `raw/SOURCES.md` and
   `.git/info/exclude`, and blocks deleting, in-place edits, redirections
   and overwriting copies or moves. If it blocks you, stop and report it;
   don't try another way.

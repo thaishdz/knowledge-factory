@@ -33,7 +33,7 @@ this file and `AGENTS.md` disagree, `AGENTS.md` wins.
    - `orphan`: a page with no incoming links (except those in `wiki/qa/`);
      an SVG in `wiki/assets/` that no page embeds.
    - `missing`: a concept mentioned several times without its own page.
-   - `structure`: index, `log.md` out of sync with git, frontmatter without
+   - `structure`: index, frontmatter without
      sources, `videos.md` with missing articles, public pages linking to
      `wiki/qa/`.
    `wiki/qa/` is private: it doesn't go in `index.md`, so its absence there
@@ -54,7 +54,6 @@ this file and `AGENTS.md` disagree, `AGENTS.md` wins.
 - `Bash` is read-only: `git log`, `git show`, `grep`, `wc`, `ls`, `find`.
   Never use it to write, move or delete files, or to commit. No hook
   enforces this rule: it's on you.
-- Don't touch `log.md`.
 
 ## What you return
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # PreToolUse hook for the archivist: it brings sources into raw/ and files
 # them, but never changes their content.
-#   Write/Edit: only raw/SOURCES.md, log.md and .git/info/exclude.
+#   Write/Edit: only raw/SOURCES.md and .git/info/exclude.
 #   Bash: no deleting, no in-place edits, no redirections, no overwriting
 #   copies or moves (cp/mv need -n), no history rewrites or pushes.
 # Exit 2 blocks the tool call. The Bash check is pattern-based, so for Bash
@@ -34,7 +34,7 @@ case "$path" in
 esac
 case "$abs" in *..*) echo "Blocked: '..' is not allowed in paths." >&2; exit 2 ;; esac
 case "${abs#"$root"/}" in
-  raw/SOURCES.md|log.md|.git/info/exclude) exit 0 ;;
+  raw/SOURCES.md|.git/info/exclude) exit 0 ;;
 esac
-echo "Blocked: the archivist may only edit raw/SOURCES.md, log.md and .git/info/exclude (tried: $path). Sources are copied or moved with cp -n / mv -n / git mv, never edited." >&2
+echo "Blocked: the archivist may only edit raw/SOURCES.md and .git/info/exclude (tried: $path). Sources are copied or moved with cp -n / mv -n / git mv, never edited." >&2
 exit 2

@@ -52,7 +52,7 @@ file and `AGENTS.md` disagree, `AGENTS.md` wins.
   wiki's gap. Never quote the human's question or say what they asked. The question goes only in the private trace.
 - You can only write to `flags/open/` and `learner/trace/`. A hook blocks any
   other path. If it blocks you, don't try another way.
-- Don't commit or touch `log.md`.
+- Don't commit.
 
 ## How you record the question
 
