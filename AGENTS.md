@@ -30,6 +30,7 @@ learner/        How the human learns. Private: only README.md is tracked
 .claude/
   agents/       tutor, auditor, curator, mentor, archivist; Explore
   hooks/        Write limits per subagent; session-start flag report
+  scripts/      reset-wiki.sh and sample-content.txt (Reset operation)
   commands/     Slash commands for the human (/wiki-help)
 wiki.config.md  Repo-specific settings (content language, section titles)
 index.md        Catalog of every public wiki page
@@ -41,7 +42,8 @@ README.md       Onboarding for humans. Not part of the wiki
 ## General rules
 
 1. Never modify or delete anything in `raw/`, except moving a source from
-   its root to a category folder during an ingest, unchanged.
+   its root to a category folder during an ingest, unchanged, and the
+   sample sources the Reset operation removes with its script.
 2. Every claim on a wiki page must trace back to a source in `raw/`. Mark
    your own inferences as such.
 3. Don't make things up. If the sources don't cover something, say so in the
@@ -130,7 +132,7 @@ quiz / review ─► mentor ─────────────┴─► lea
 
 | | Tutor | Auditor | Curator | Mentor | Archivist | Main session |
 |---|---|---|---|---|---|---|
-| Runs on | Any question | `lint` | `curate`; approved plans (ingest pages, artifact, video, qa page) | `quiz`, `review` | Sources entering or being filed in `raw/` | Every input from the human: it orchestrates |
+| Runs on | Any question | `lint` | `curate`; approved plans (ingest pages, artifact, video, qa page) and the end of a reset | `quiz`, `review` | Sources entering or being filed in `raw/` | Every input from the human: it orchestrates |
 | Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | The material and `raw/` | Agents' reports and their commits |
 | Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `videos.md`, `flags/`; framework files for `procedure` flags | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
 | Commits | No | No | Yes | No | Yes | No |
@@ -313,6 +315,7 @@ does type one, run it, with no reminder.
 | What the human writes | Operation | Who |
 |---|---|---|
 | A topic to learn, or material (a file, a folder, a course) | Study | Main session orchestrating Explore, archivist, curator, auditor, mentor |
+| Wants to start their own wiki, or to clear the sample content | Reset | Main session + curator |
 | A question about what they're learning | Query | Tutor |
 | A pasted `QUIZ RESULTS` block | Quiz grading | Mentor |
 | A video link, with or without the article it goes with | Video | Main session + curator |
@@ -609,6 +612,31 @@ Same as "Artifact rules" and "Artifact visual style", but in
 5. Delete `learner/quiz.md` (the HTML stays) and report: grading, next
    review dates, one line on what changed in the profile.
 
+### Reset
+
+The human says they want to start their own wiki or clear the sample
+content that ships with the template. Only on explicit request, never as
+part of Study.
+
+1. The main session runs `.claude/scripts/reset-wiki.sh --dry-run` and shows
+   the human what will be deleted: sample pages, diagrams, artifacts and
+   sources in `raw/`. If it reports no sample content, say so and stop.
+2. In the same message it asks for `content_language`, `mixing`,
+   `section_titles` and `flashcard_labels` (proposing the current values)
+   and for one confirmation. Nothing is deleted before it.
+3. The main session runs `.claude/scripts/reset-wiki.sh`. The script is the
+   only thing allowed to delete from `raw/` (rule 1): it removes only the
+   paths in `.claude/scripts/sample-content.txt`, keeps every folder (with
+   `.gitkeep`) and rewrites `index.md`, `videos.md` and `raw/SOURCES.md` as
+   empty skeletons. It stops if `git status` isn't clean. Private data
+   (`learner/`, `flags/`, `wiki/qa/`) is never touched.
+4. The curator (plan mode) writes the values the human gave into
+   `wiki.config.md`, checks no link or index entry points to a deleted page
+   and commits `docs(wiki): reset sample content`.
+5. The main session reviews the commit and tells the human the wiki is
+   empty and they can say what they want to learn. It reminds them to check
+   `LICENSE-content`, which covered the sample content.
+
 ## index.md format
 
 Grouped by type, alphabetical, one line per page, descriptions in the
@@ -672,6 +700,7 @@ session doesn't commit.
 | `AGENTS.md` / `README.md` | `docs(schema): …`, `docs(readme): …` |
 | Config (`.claude/`, `.obsidian/`, `.gitignore`) | `chore(config): …` |
 | Procedure flag applied | `docs(schema): resolve procedure flag on gitignore comments` |
+| Reset (sample content removed) | `docs(wiki): reset sample content` |
 | Saved qa answer | No commit (private) |
 
 ## Changes to this schema
