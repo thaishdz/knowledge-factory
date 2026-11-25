@@ -127,3 +127,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] schema | docs(readme): describe model routing
 - agent: Claude (Opus 5.5)
 - files: README.md
+
+## [2026-11-25] schema | docs(schema): rename consultant to tutor
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: fits the academy framing; adds a line separating the tutor (answers) from the mentor (quizzes)

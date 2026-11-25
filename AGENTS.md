@@ -28,7 +28,7 @@ learner/        How the human learns. Private: only README.md is tracked
   quiz.md       Quiz waiting to be graded (only while one is open)
   cards/        HTML flashcards per quiz
 .claude/
-  agents/       consultant, auditor, curator, mentor; Explore, implementer
+  agents/       tutor, auditor, curator, mentor; Explore, implementer
   hooks/        Write limits per subagent; session-start flag report
   commands/     Slash commands for the human (/wiki-help, /promote)
 wiki.config.md  Repo-specific settings (role, content language). Never synced
@@ -114,24 +114,26 @@ or something looks wrong, it raises a flag instead of guessing; a separate
 agent, the curator, processes flags and updates the store (this git repo).
 
 ```
-question ─► consultant ─┐
-                        ├─► flags/open/ ─► curator ─► wiki/ + commit ─► better answers
-lint ─────► auditor ────┘                     └─► needs-source ─► the human adds a source
+question ─► tutor ───┐
+                     ├─► flags/open/ ─► curator ─► wiki/ + commit ─► better answers
+lint ─────► auditor ─┘                     └─► needs-source ─► the human adds a source
 
-question ─► consultant ─► learner/trace/ ─┐
-quiz / review ─► mentor ──────────────────┴─► learner/profile.md + review.md ─► better quizzes
+question ─► tutor ─► learner/trace/ ─┐
+quiz / review ─► mentor ─────────────┴─► learner/profile.md + review.md ─► better quizzes
 ```
 
 ### Roles
 
-| | Consultant | Auditor | Curator | Mentor | Main session |
+| | Tutor | Auditor | Curator | Mentor | Main session |
 |---|---|---|---|---|---|
 | Runs on | Any question | `lint` | `curate` | `quiz`, `review` | `ingest`, `video`, `artifact`, `promote` |
 | Looks at | Pages needed to answer | The whole wiki | Flags and `raw/` | `wiki/`, `learner/` | Depends |
 | Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `index.md`, `log.md`, `flags/`; framework files for approved `procedure` flags (staging) | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/open/` (procedure), framework files |
 | Commits | No | No | Yes | No | Yes |
 
-- The consultant finds problems in passing (mostly `missing`); the auditor
+- The tutor answers the human's questions; the mentor quizzes them and
+  tracks how they learn. Neither edits the wiki.
+- The tutor finds problems in passing (mostly `missing`); the auditor
   reviews everything (mostly structure). The curator closes duplicates.
 - The main session delegates to the right subagent and relays its report.
   Operations that need the human's approval halfway (ingest, video,
@@ -159,7 +161,7 @@ Haiku; writing goes to Sonnet:
 |---|---|---|
 | `Explore` | Haiku | Read-only lookups for the main session: which pages, sources or files cover something. Returns paths and short findings |
 | `implementer` | Sonnet | Writes an approved plan (ingest pages, artifact, saved qa page), runs the wiki checks, never commits. Writes only to `wiki/`, `artifacts/`, `index.md`, `videos.md` |
-| consultant, auditor, curator, mentor | Sonnet | Their roles above |
+| tutor, auditor, curator, mentor | Sonnet | Their roles above |
 
 - `Explore` must keep that exact name: it replaces Claude Code's built-in
   `Explore`, which runs on the session's model.
@@ -173,7 +175,7 @@ Haiku; writing goes to Sonnet:
 1. `index.md` first: which pages exist and what they cover.
 2. `wiki/`: what answers come from. `wiki/qa/` isn't in the index: use
    Glob/Grep.
-3. `raw/`: source of truth. The consultant never answers from it (that's a
+3. `raw/`: source of truth. The tutor never answers from it (that's a
    `missing` flag); the curator uses it to fix the wiki.
 4. `log.md`, `git log` and each page's `updated`: what changed and when.
 5. `videos.md`: never a source for claims.
@@ -187,7 +189,7 @@ One file per flag: `flags/open/YYYY-MM-DD-<type>-<slug>.md`, from
 ---
 type: missing          # missing | contradiction | stale | broken-link | orphan | structure | procedure
 page: wiki/topics/example.md   # optional
-raised_by: consultant  # consultant | auditor | mentor | main
+raised_by: tutor       # tutor | auditor | mentor | main
 raised: 2026-11-24
 status: open           # open | needs-source | needs-review | closed
 suggestion: ""         # optional: the fix the raiser proposes
@@ -235,7 +237,7 @@ external service. Never `git add -f` it.
 **`trace/YYYY-MM.md`** (L1). Append-only. One entry per event:
 
 ```markdown
-## 2026-11-24 · question · consultant
+## 2026-11-24 · question · tutor
 - q: "How is an LLM Wiki different from RAG?"
 - pages: [[rag]], [[llm-wiki]]
 - gap: missing (flags/open/2026-11-24-missing-example.md)
@@ -315,7 +317,7 @@ extensions.
 | `video <url> for <name>` | Video (normal form) | Main session |
 | `video <url>` | Video, suggesting an article | Main session |
 | `artifact <topic>` | Artifact | Main session |
-| *(a question)* | Query | Consultant |
+| *(a question)* | Query | Tutor |
 | `lint` | Lint | Auditor |
 | `curate` / `curate <name>` | Curate all open flags / one flag | Curator |
 | `quiz <topic>` / `review` | Quiz on a topic / on what's due today | Mentor |
@@ -439,7 +441,7 @@ its content or exact layout.
 
 ### Query
 
-Done by the consultant; the main session passes the question as-is and
+Done by the tutor; the main session passes the question as-is and
 relays the answer.
 
 1. Read `index.md` and the relevant pages (including `wiki/qa/`).
