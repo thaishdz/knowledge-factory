@@ -28,7 +28,7 @@ learner/        How the human learns. Private: only README.md is tracked
   quiz.md       Quiz waiting to be graded (only while one is open)
   cards/        HTML flashcards per quiz
 .claude/
-  agents/       consultant, auditor, curator, mentor
+  agents/       consultant, auditor, curator, mentor; Explore, implementer
   hooks/        Write limits per subagent; session-start flag report
   commands/     Slash commands for the human (/wiki-help, /promote)
 wiki.config.md  Repo-specific settings (role, content language). Never synced
@@ -147,6 +147,27 @@ quiz / review ─► mentor ─────────────────�
   reply, and the human decides when to run `curate`. In a prod repo it also
   reports pending `procedure` flags in staging.
 
+### Models and delegation
+
+The main session is the lead and runs on the session's model. It owns
+quality, the conventions in this file and privacy: it writes the plans the
+human approves, delegates the work, reviews every change (`git diff`)
+before committing, and makes the commits. Reading and exploring go to
+Haiku; writing goes to Sonnet:
+
+| Agent | Model | Does |
+|---|---|---|
+| `Explore` | Haiku | Read-only lookups for the main session: which pages, sources or files cover something. Returns paths and short findings |
+| `implementer` | Sonnet | Writes an approved plan (ingest pages, artifact, saved qa page), runs the wiki checks, never commits. Writes only to `wiki/`, `artifacts/`, `index.md`, `videos.md` |
+| consultant, auditor, curator, mentor | Sonnet | Their roles above |
+
+- `Explore` must keep that exact name: it replaces Claude Code's built-in
+  `Explore`, which runs on the session's model.
+- Models are set in each agent's `model:` frontmatter.
+- The main session doesn't write what a subagent can. It steps in only when
+  a Sonnet agent goes in circles or can't get past an obstacle, and says
+  so to the human.
+
 ### Where to look for what
 
 1. `index.md` first: which pages exist and what they cover.
@@ -257,7 +278,8 @@ up), but private because they reveal what the human asks:
 - Only `README.md` is tracked: no commit, no `log.md` entry, not in
   `index.md`. Public pages don't link to them; they may link to public pages.
 - The mentor proposes one when the trace shows the same question or gap at
-  least twice; if the human accepts, the main session writes it.
+  least twice; if the human accepts, the main session has the `implementer`
+  write it.
 - If the answer needs something the wiki lacks, a `missing` flag comes first.
 - Problems inside `wiki/qa/` are reported, not flagged; the main session
   fixes them if the human wants.
@@ -321,8 +343,10 @@ table. If commands, roles or flag states change, update it too.
 4. Summarize the key points and the pages you'll create or touch. Wait for
    approval.
 5. Read `index.md` and the related pages.
-6. Create the new pages the source justifies; update affected pages (info,
+6. Delegate to the `implementer`, passing the approved summary as its plan:
+   create the new pages the source justifies; update affected pages (info,
    `sources`, `updated`); add cross-links both ways; update `index.md`.
+   Review its changes and checks before committing.
 7. Commit (source first, then pages), each commit with its `log.md` entry.
 
 ### Video
@@ -352,8 +376,10 @@ from the wiki and regenerable at any time. Not a source or a wiki page.
    so and stop.
 2. Say which pages you'll use and which sections it'll have. Wait for
    approval.
-3. Write `artifacts/<topic-in-kebab-case>.html` (overwrite if it exists).
-4. Add it to the "Artifacts" section of `index.md` and commit.
+3. Delegate to the `implementer` with the approved pages and sections: it
+   writes `artifacts/<topic-in-kebab-case>.html` (overwrite if it exists)
+   and adds it to the "Artifacts" section of `index.md`.
+4. Review the artifact against the rules below and commit.
 
 #### Artifact rules
 

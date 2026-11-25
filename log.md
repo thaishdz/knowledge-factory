@@ -113,3 +113,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] schema | docs(readme): rename librarian to consultant
 - agent: Claude (Opus 5.5)
 - files: README.md, docs/loop.svg
+
+## [2026-11-25] schema | docs(schema): add model routing with explore and implementer agents
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: main session leads and reviews; Explore reads on Haiku; implementer writes approved ingest, artifact and qa plans on Sonnet
