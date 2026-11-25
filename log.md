@@ -166,3 +166,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] schema | docs(readme): drop implementer from model routing
 - agent: Claude (Opus 5.5)
 - files: README.md
+
+## [2026-11-25] schema | docs(schema): add study operation orchestrating every agent
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: the human names a topic or hands over material; one plan approval, then ingest, lint, curate, artifact and quiz run end to end

@@ -126,7 +126,7 @@ quiz / review ─► mentor ─────────────┴─► lea
 
 | | Tutor | Auditor | Curator | Mentor | Main session |
 |---|---|---|---|---|---|
-| Runs on | Any question | `lint` | `curate`; approved plans from the main session | `quiz`, `review` | `ingest`, `video`, `artifact`, `promote` |
+| Runs on | Any question | `lint` | `curate`; approved plans from the main session | `quiz`, `review` | `study`, `ingest`, `video`, `artifact`, `promote` |
 | Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | Depends |
 | Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/`; framework files for approved `procedure` flags (staging) | `learner/`, `flags/open/` | `raw/` (move only), `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/open/` (procedure), framework files |
 | Commits | No | No | Yes (`curate` only) | No | Yes |
@@ -136,9 +136,10 @@ quiz / review ─► mentor ─────────────┴─► lea
 - The tutor finds problems in passing (mostly `missing`); the auditor
   reviews everything (mostly structure). The curator closes duplicates.
 - The main session delegates to the right subagent and relays its report.
-  Operations that need the human's approval halfway (ingest, video,
-  artifact, promote) stay in the main session: a subagent can't ask while
-  it works.
+  Operations that need the human's approval halfway (study, ingest,
+  video, artifact, promote) stay in the main session: a subagent can't ask
+  while it works. In Study the main session runs the whole chain and the
+  human only approves the plan.
 - Each subagent reads this file and `wiki.config.md` first. Hooks in
   `.claude/hooks/` enforce the "Writes to" row and block the curator from
   `raw/`. The auditor has `Bash` for `git log`, so for it the limit is
@@ -311,13 +312,20 @@ repo and is never synced.
 
 ## Operations
 
+The human doesn't need to know the agents or the commands. The main way to
+use the wiki is **Study**: the human names a topic or hands over material,
+and the main session orchestrates every agent. Questions go to the tutor and
+pasted `QUIZ RESULTS` to the mentor without any command. The other commands
+are optional shortcuts for running a single step.
+
 Commands are in English; the conversation follows `wiki.config.md`. If the
-human types a command another way, run it and remind them of the English
-form. `<name>` is part of a file name: the human never gives paths or
-extensions.
+human types a shortcut another way, run it and remind them of the English
+form (not for Study, which is meant to be asked in plain words). `<name>` is
+part of a file name: the human never gives paths or extensions.
 
 | Command | Operation | Who |
 |---|---|---|
+| `study <topic>`, or any plain request to learn a topic or use some material | Study | Main session, orchestrating every agent |
 | `ingest <name>` | Ingest | Main session |
 | `video <url> for <name>` | Video (normal form) | Main session |
 | `video <url>` | Video, suggesting an article | Main session |
@@ -331,6 +339,44 @@ extensions.
 
 `/wiki-help` (`.claude/commands/wiki-help.md`) is a cheat sheet of this
 table. If commands, roles or flag states change, update it too.
+
+### Study
+
+`study <topic>`, or "I want to learn RAG", "here's a RAG course". One
+approval, at the plan; after that the main session runs to the end without
+asking, and only stops if something blocks the whole topic.
+
+1. **Scope.** If the human hands over material (a file or folder), copy it
+   unchanged into the root of `raw/`; a URL can't be saved as-is, so ask the
+   human to save it in `raw/` (e.g. with Obsidian's web clipper). Then use
+   `Explore` to find the sources in `raw/` on the topic, which of them have
+   no ingest in `log.md`, and what `index.md` and `wiki/` already cover.
+   If `raw/` has nothing on the topic and the wiki doesn't cover it, say
+   which kind of source would be needed and stop.
+2. **Plan (the only approval).** Show in a few lines: the sources to ingest
+   (with the category for those in the root and whether each is link-only),
+   the pages each one creates or updates, the artifact and its sections,
+   the size of the quiz, and what the sources won't cover. Wait for the
+   human's approval; changes to the plan are made now.
+3. **Build.** For each source, in order: move it to its category and list
+   it in `raw/SOURCES.md` (commit `docs(raw): …`), hand its part of the plan
+   to the curator (plan mode), review the diff, and commit the ingest with
+   its `log.md` entry. This replaces the questions and the approval of
+   Ingest steps 1–4. Remote images that need Obsidian go to the final
+   report; don't stop for them.
+4. **Check.** Run the auditor (`lint`), then the curator (`curate`) on the
+   flags it raised. `needs-source` and `needs-review` flags wait for the
+   human: list them in the final report, don't stop.
+5. **Study material.** If the plan includes an artifact, the curator writes
+   it (plan mode), the main session reviews and commits it. Then the mentor
+   builds the quiz on the topic and the main session opens the cards.
+6. **Report.** In a few lines: what the wiki learned (pages and commits),
+   what's still missing and which source would fill it, anything waiting
+   for the human's decision, and what to do next: ask anything, and paste
+   the results when the cards are done.
+
+Anything the plan didn't foresee and that doesn't block the topic goes to
+the final report instead of a question.
 
 ### Ingest
 
