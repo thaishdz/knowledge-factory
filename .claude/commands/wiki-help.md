@@ -16,7 +16,7 @@ one-line summary per pending flag, based on this listing (if it's empty, say
 "No pending flags"):
 
 ```
-!`grep -H "^status:" flags/open/*.md 2>/dev/null || true`
+!`grep -rH --include='*.md' '^status:' flags/open 2>/dev/null || true`
 ```
 
 Also add a line for the quiz: if this listing is not empty, say "You have a

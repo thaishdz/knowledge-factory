@@ -15,21 +15,25 @@ for f in flags/open/*.md; do
 done
 total=$(( ${#open[@]} + ${#review[@]} + ${#source[@]} ))
 lang="FIRST, before anything else in your first reply, ask the human whether to talk in Spanish or English this session, and use that language for the rest of the session (your replies and the agent reports you relay). Pass that language to subagents in your request."
-# First-run onboarding: only while sample content is on disk and the marker is absent.
-onboard=""
+# First-run welcome: only while sample content is on disk and the marker is absent.
+# The assistant never speaks first, so the welcome goes in a visible systemMessage;
+# the marker is created later by the UserPromptSubmit hook (onboarding.sh).
+welcome=""
 if [ ! -e .claude/.onboarded ] && [ -f .claude/scripts/sample-content.txt ]; then
   while IFS= read -r p; do
     case "$p" in ''|'#'*) continue ;; esac
     if [ -e "$p" ]; then
-      onboard="ONBOARDING (first run, show it once): right after asking the conversation language, welcome the human in a few lines: this is a wiki that agents build from their sources, and they only write in plain words. Then offer two paths: explore the sample first (e.g. ask something about RAG, or ask to be quizzed), or start their own wiki (the Reset operation)."
-      touch .claude/.onboarded 2>/dev/null
+      welcome="Welcome! This is a wiki that agents build from your sources; you only write in plain words. Write anything to start (e.g. hello): I'll show you the sample or help you start your own wiki."
       break
     fi
   done < .claude/scripts/sample-content.txt
 fi
-[ -n "$onboard" ] && lang="$lang $onboard"
 if [ "$total" -eq 0 ]; then
-  jq -n --arg ctx "$lang" '{hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'
+  if [ -n "$welcome" ]; then
+    jq -n --arg msg "$welcome" --arg ctx "$lang" '{systemMessage: $msg, hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'
+  else
+    jq -n --arg ctx "$lang" '{hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'
+  fi
   exit 0
 fi
 
@@ -39,6 +43,7 @@ parts=()
 [ ${#review[@]} -gt 0 ] && parts+=("$(line "needs-review:" ${#review[@]} "waiting for your approval")")
 [ ${#source[@]} -gt 0 ] && parts+=("$(line "needs-source:" ${#source[@]} "need a source in raw/")")
 joined=$(printf '%s; ' "${parts[@]}"); summary="Pending flags — ${joined%; }"
+[ -n "$welcome" ] && summary="$welcome"$'\n'"$summary"
 detail=$(printf 'Pending flags in flags/open/:\n'; for n in "${open[@]}"; do echo "- open: $n"; done; for n in "${review[@]}"; do echo "- needs-review: $n"; done; for n in "${source[@]}"; do echo "- needs-source: $n"; done; echo "$lang"; echo "Then tell the human about the flags, in plain words and without commands, and offer to process them. Do not run the curator until they agree.")
 jq -n --arg msg "$summary" --arg ctx "$detail" \
   '{systemMessage: $msg, hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'
