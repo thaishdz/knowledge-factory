@@ -147,7 +147,7 @@ quiz / review ─► mentor ─────────────┴─► lea
 - No agent runs in the background or on a schedule. Instead, a
   `SessionStart` hook (`session-flags.sh`) reports pending flags when a
   session starts; the main session tells the human at the start of its first
-  reply, and the human decides when to run `curate`. In a prod repo it also
+  reply and offers to process them; the curator only runs once they agree. In a prod repo it also
   reports pending `procedure` flags in staging.
 
 ### Models and delegation
@@ -312,37 +312,39 @@ repo and is never synced.
 
 ## Operations
 
-The human doesn't need to know the agents or the commands. The main way to
-use the wiki is **Study**: the human names a topic or hands over material,
-and the main session orchestrates every agent. Questions go to the tutor and
-pasted `QUIZ RESULTS` to the mentor without any command. The other commands
-are optional shortcuts for running a single step.
+The human never types commands and never calls an agent. They write in
+plain words (a topic, some material, a question, a link, a yes) and the
+main session works out the operation and orchestrates the agents. The
+operation names below (`study`, `ingest`, `curate`…) are internal: they
+name the procedures in this file and the agents' instructions. If the human
+does type one, run it, with no reminder.
 
-Commands are in English; the conversation follows `wiki.config.md`. If the
-human types a shortcut another way, run it and remind them of the English
-form (not for Study, which is meant to be asked in plain words). `<name>` is
-part of a file name: the human never gives paths or extensions.
-
-| Command | Operation | Who |
+| What the human writes | Operation | Who |
 |---|---|---|
-| `study <topic>`, or any plain request to learn a topic or use some material | Study | Main session, orchestrating every agent |
-| `ingest <name>` | Ingest | Main session |
-| `video <url> for <name>` | Video (normal form) | Main session |
-| `video <url>` | Video, suggesting an article | Main session |
-| `artifact <topic>` | Artifact | Main session |
-| *(a question)* | Query | Tutor |
-| `lint` | Lint | Auditor |
-| `curate` / `curate <name>` | Curate all open flags / one flag | Curator |
-| `quiz <topic>` / `review` | Quiz on a topic / on what's due today | Mentor |
-| *(paste `QUIZ RESULTS`)* | Quiz grading | Mentor |
-| `promote` | Promote framework from staging (prod only) | Main session |
+| A topic to learn, or material (a file, a folder, a course) | Study | Main session, orchestrating every agent |
+| A question about what they're learning | Query | Tutor |
+| A pasted `QUIZ RESULTS` block | Quiz grading | Mentor |
+| A video link, with or without the article it goes with | Video | Main session |
+| Asks to be quizzed, or what's due for review | Quiz / review | Mentor |
+| Asks for a visual summary of a topic | Artifact | Main session + curator |
+| Asks to add one specific source from `raw/` | Ingest | Main session + curator |
+| Asks to check the wiki | Lint, then Curate on the new flags | Auditor, curator |
+| Agrees to process pending flags, or approves a proposal in one | Curate (all, or that flag) | Curator |
+| Asks to bring framework changes from staging (prod only) | Promote | Main session |
 
-`/wiki-help` (`.claude/commands/wiki-help.md`) is a cheat sheet of this
-table. If commands, roles or flag states change, update it too.
+- If the input fits more than one operation, ask one short question.
+- `<name>` is part of a file name: the human never gives paths or
+  extensions.
+- Pending flags and reviews due today are offered in plain words ("there
+  are 2 gaps I can fix, shall I?"), never as a command to type.
+
+`/wiki-help` (`.claude/commands/wiki-help.md`) shows the human what they can
+say and what's pending. If operations, roles or flag states change, update
+it too.
 
 ### Study
 
-`study <topic>`, or "I want to learn RAG", "here's a RAG course". One
+The human writes "I want to learn RAG" or "here's a RAG course". One
 approval, at the plan; after that the main session runs to the end without
 asking, and only stops if something blocks the whole topic.
 

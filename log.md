@@ -179,3 +179,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] schema | docs(readme): make study the quick start
 - agent: Claude (Opus 5.5)
 - files: README.md
+
+## [2026-11-25] schema | docs(schema): map plain input to operations instead of commands
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: the human never types commands; the main session picks the operation and offers pending flags in plain words
