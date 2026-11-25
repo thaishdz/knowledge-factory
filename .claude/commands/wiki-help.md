@@ -35,6 +35,7 @@ run the agents myself.
 | "Quiz me on X", "what's due today?" | New flashcards |
 | A video link | Saved under the article it goes with |
 | "Check the wiki" | Reviewed for errors; I fix what the sources allow |
+| "I want to start my own wiki", "clear the sample content" | I show you what the template's sample content is, ask you for the language and titles, and after your yes I empty the wiki |
 | "Yes" to a pending proposal | Applied and committed |
 
 **Pending items** (I tell you when a session starts)

@@ -1,0 +1,17 @@
+# Sample content shipped with the template. One path per line.
+# Used by reset-wiki.sh; keep it in sync with the template's sample content.
+wiki/entities/andrej-karpathy.md
+wiki/entities/harrison-chase.md
+wiki/entities/langchain.md
+wiki/topics/agent-memory.md
+wiki/topics/knowledge-factory.md
+wiki/topics/llm-wiki.md
+wiki/topics/rag.md
+wiki/topics/reasoning-placement.md
+wiki/comparisons/rag-vs-agent-memory-vs-llm-wiki.md
+wiki/assets/agent-memory.svg
+wiki/assets/llm-wiki.svg
+wiki/assets/rag-vs-agent-memory-vs-llm-wiki.svg
+wiki/assets/rag.svg
+raw/articles/RAG vs. Agent Memory vs. LLM Wiki_ A Practical Comparison.md
+raw/articles/how-to-build-a-knowledge-factory.md

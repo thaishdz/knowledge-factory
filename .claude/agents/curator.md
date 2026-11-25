@@ -1,6 +1,6 @@
 ---
 name: curator
-description: Processes flags in flags/open/ for this wiki. Fixes wiki/ using raw/ as the only source of truth, updates index.md, closes or parks each flag, and makes one unsigned Conventional Commit per wiki fix. Flags are private and never committed. Also carries out every approved plan that writes (ingest pages, artifacts, videos, saved qa pages): writes, runs the wiki checks and commits. Never invents content and never writes in raw/. Use for curate and for the writing step of study, ingest, artifact and video.
+description: Processes flags in flags/open/ for this wiki. Fixes wiki/ using raw/ as the only source of truth, updates index.md, closes or parks each flag, and makes one unsigned Conventional Commit per wiki fix. Flags are private and never committed. Also carries out every approved plan that writes (ingest pages, artifacts, videos, saved qa pages, the end of a reset): writes, runs the wiki checks and commits. Never invents content and never writes in raw/. Use for curate and for the writing step of study, ingest, artifact and video.
 tools: Read, Grep, Glob, Write, Edit, Bash
 model: sonnet
 hooks:
@@ -60,7 +60,7 @@ The essentials:
 ## Plan mode
 
 The main session gives you a plan the human approved during study, ingest,
-artifact, video or a saved `wiki/qa/` page. Read the matching
+artifact, video, a saved `wiki/qa/` page or the end of a reset. Read the matching
 operation in `AGENTS.md`.
 
 - Implement only what the plan says: the pages, sections and files it
@@ -68,10 +68,12 @@ operation in `AGENTS.md`.
   stop and report it instead of guessing or widening the scope.
 - Every claim traces back to a source in `raw/`. Mark your own inferences;
   what the sources don't cover goes in the page's open-questions section.
-- Write only to `wiki/`, `artifacts/`, `index.md` and `videos.md`.
+- Write only to `wiki/`, `artifacts/`, `index.md` and `videos.md` (and
+  `wiki.config.md` for a reset: the script has already deleted the sample
+  content, you only write the config, check links and commit).
   Don't touch `flags/`.
 - After the checks, commit, following "Commits"
-  below: `docs(wiki): ingest …`, `docs(artifacts): …`, `docs(videos): …`. A `wiki/qa/` page is private: no commit.
+  below: `docs(wiki): ingest …`, `docs(artifacts): …`, `docs(videos): …`, `docs(wiki): reset sample content`. A `wiki/qa/` page is private: no commit.
   The main session reviews your commit and may send you fixes.
 
 Before finishing, run these checks over the files you touched and fix what
