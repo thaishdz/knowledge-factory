@@ -29,7 +29,7 @@ learner/        How the human learns. Private: only README.md is tracked
   cards/        HTML flashcards per quiz
 .claude/
   agents/       tutor, auditor, curator, mentor, archivist; Explore
-  hooks/        Write limits per subagent; session-start flag report
+  hooks/        Write limits per subagent; session-start flag report and one-time welcome
   scripts/      reset-wiki.sh and sample-content.txt (Reset operation)
   commands/     Slash commands for the human (/wiki-help)
 wiki.config.md  Repo-specific settings (content language, section titles)
@@ -158,6 +158,10 @@ quiz / review ─► mentor ─────────────┴─► lea
   `SessionStart` hook (`session-flags.sh`) reports pending flags when a
   session starts; the main session tells the human at the start of its first
   reply and offers to process them; the curator only runs once they agree.
+  On a first run (sample content still present and `.claude/.onboarded`
+  absent, a gitignored marker the hook creates) it also asks the main session
+  to welcome the human once, right after the language question, and offer
+  two paths: explore the sample or start their own wiki.
 
 ### Models and delegation
 
@@ -616,7 +620,8 @@ Same as "Artifact rules" and "Artifact visual style", but in
 
 The human says they want to start their own wiki or clear the sample
 content that ships with the template. Only on explicit request, never as
-part of Study.
+part of Study. It is usually reached from the one-time welcome that the
+SessionStart hook asks for on a first run.
 
 1. The main session runs `.claude/scripts/reset-wiki.sh --dry-run` and shows
    the human what will be deleted: sample pages, diagrams, artifacts and
