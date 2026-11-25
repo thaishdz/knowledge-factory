@@ -24,7 +24,7 @@ it's empty, say nothing.
 
 ## Wiki cheat sheet
 
-**Ask the wiki** → *librarian*
+**Ask the wiki** → *consultant*
 - Type the question as-is. It answers only from the wiki, cites the pages
   and raises a flag if something is missing or doesn't add up.
 

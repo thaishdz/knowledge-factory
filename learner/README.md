@@ -14,5 +14,5 @@ cards/<slug>.html  Flashcards to practice in the browser
 ```
 
 The files are created as you use `quiz <topic>`, `review` and ask the
-librarian questions. Back this folder up yourself if you want to keep it.
+consultant questions. Back this folder up yourself if you want to keep it.
 See "Learner store" and "Quiz" in `AGENTS.md`.
