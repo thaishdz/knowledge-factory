@@ -3,6 +3,13 @@ description: What you can say to the wiki, and what's pending
 allowed-tools: Bash(grep:*), Bash(ls:*)
 ---
 
+If this listing is not empty, start with this line: "This is the sample
+wiki; say 'I want to start my own wiki' to clear it."
+
+```
+!`ls wiki/topics/rag.md wiki/topics/llm-wiki.md wiki/topics/knowledge-factory.md 2>/dev/null || true`
+```
+
 Show the human the guide below exactly as written, without adding
 explanations or running any operation. Then add a "Status" section with a
 one-line summary per pending flag, based on this listing (if it's empty, say

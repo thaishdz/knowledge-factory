@@ -15,6 +15,19 @@ for f in flags/open/*.md; do
 done
 total=$(( ${#open[@]} + ${#review[@]} + ${#source[@]} ))
 lang="FIRST, before anything else in your first reply, ask the human whether to talk in Spanish or English this session, and use that language for the rest of the session (your replies and the agent reports you relay). Pass that language to subagents in your request."
+# First-run onboarding: only while sample content is on disk and the marker is absent.
+onboard=""
+if [ ! -e .claude/.onboarded ] && [ -f .claude/scripts/sample-content.txt ]; then
+  while IFS= read -r p; do
+    case "$p" in ''|'#'*) continue ;; esac
+    if [ -e "$p" ]; then
+      onboard="ONBOARDING (first run, show it once): right after asking the conversation language, welcome the human in a few lines: this is a wiki that agents build from their sources, and they only write in plain words. Then offer two paths: explore the sample first (e.g. ask something about RAG, or ask to be quizzed), or start their own wiki (the Reset operation)."
+      touch .claude/.onboarded 2>/dev/null
+      break
+    fi
+  done < .claude/scripts/sample-content.txt
+fi
+[ -n "$onboard" ] && lang="$lang $onboard"
 if [ "$total" -eq 0 ]; then
   jq -n --arg ctx "$lang" '{hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'
   exit 0
