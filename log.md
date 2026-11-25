@@ -140,3 +140,8 @@ One entry per commit, append-only. See "log.md format" in `AGENTS.md`.
 ## [2026-11-25] schema | docs(readme): rename consultant to tutor
 - agent: Claude (Opus 5.5)
 - files: README.md, docs/loop.svg
+
+## [2026-11-25] schema | docs(schema): make flags private to the factory
+- agent: Claude (Opus 5.5)
+- files: AGENTS.md
+- notes: flags are the factory's working knowledge and stay out of git; only wiki fixes are committed

@@ -19,7 +19,7 @@ wiki/           Pages maintained by the agents
   qa/           Answers combining several pages. Private: only README.md is tracked
   assets/       SVG diagrams used by the pages
 artifacts/      Visual HTML summaries generated from the wiki
-flags/          Gaps or errors found in the wiki
+flags/          Gaps or errors found in the wiki. Private: only TEMPLATE.md is tracked
   open/ closed/ TEMPLATE.md
 learner/        How the human learns. Private: only README.md is tracked
   trace/        L1: raw traces, one file per month (YYYY-MM.md)
@@ -223,8 +223,13 @@ puts the proposed rule change in `suggestion:`. Procedures belong to the
 framework, so the flag goes where the framework is made: in a prod repo, in
 `staging_repo`'s `flags/open/`; otherwise, in this repo. One-off preferences
 that don't generalize aren't flagged.
-- Flags end up in git: they describe the wiki's gap and never quote the
-  human's question, say what they asked, or name a `wiki/qa/` page.
+- Flags are the factory's own working knowledge, not the wiki's: everything
+  in `flags/open/` and `flags/closed/` is in `.gitignore` and never goes
+  into a commit. Never `git add -f` them. Only `flags/TEMPLATE.md` (and the
+  folders' `.gitkeep`) is tracked.
+- Even so, a flag describes the wiki's gap and never quotes the human's
+  question, says what they asked, or names a `wiki/qa/` page: its content
+  feeds wiki fixes, commit messages and `log.md`.
 
 ### Learner store
 
@@ -476,7 +481,9 @@ duplicates), then a report grouped by type. It checks:
 ### Curate
 
 Done by the curator: `curate` (every `open` flag) or `curate <name>` (one
-flag, any state). One flag = one fix = one commit = one `log.md` entry.
+flag, any state). One flag = one fix. A fix that changes tracked files is
+one commit with one `log.md` entry; closing, parking or proposing without
+changing tracked files makes no commit (flags are private).
 
 1. Read the flag (including any `suggestion:`), the affected page and
    related pages.
@@ -493,10 +500,11 @@ flag, any state). One flag = one fix = one commit = one `log.md` entry.
      `promote`.
    - `procedure` (staging only): write the concrete change (files and
      diff) in the flag and set `needs-review`. Once the human approves
-     (`curate <name>`), apply it to the framework files, commit it with the
-     flag closed, and remind the human to `promote` into prod.
+     (`curate <name>`), apply it to the framework files, commit them, close
+     the flag, and remind the human to `promote` into prod.
 4. Closing: `status: closed`, one-line `resolution:`, move to `flags/closed/`.
-5. Commit (type `curate`), including the flag in its new state.
+5. If tracked files changed, commit them (type `curate`). The flag itself
+   is never committed.
 6. Report: closed flags, `needs-source` with the source needed,
    `needs-review` with the proposal.
 
@@ -635,6 +643,7 @@ Use `tail` or `grep` on `log.md`; don't read it whole.
   Public repos commit with the GitHub `noreply` address.
 - Nothing from `learner/` or `wiki/qa/` leaves the machine: not in
   searches, commits, artifacts or flags.
+- Flags stay on the machine too: they're never committed or pushed.
 
 ## Commits
 
@@ -649,8 +658,8 @@ human reviews with `git show`.
   with wiki content.
 - No `git push` unless the human asks.
 - Before committing, `git status`: include only what this operation
-  touched, and warn about anyone else's changes. Uncommitted flags in
-  `flags/open/` are normal and only go into the curator's commit for them.
+  touched, and warn about anyone else's changes. Flags are ignored by git
+  and never go into a commit.
 
 | Case | Example |
 |---|---|
@@ -658,7 +667,8 @@ human reviews with `git show`.
 | Ingest | `docs(wiki): ingest karpathy llm wiki gist` |
 | Video | `docs(videos): add suggested video for karpathy llm wiki gist` |
 | Artifact | `docs(artifacts): add visual summary for rag` |
-| Flag fixed / closed / parked | `fix(wiki): resolve missing flag on embeddings`, `docs(flags): close duplicate flag on rag`, `docs(flags): park flag on langgraph as needs-source` |
+| Flag fixed | `fix(wiki): resolve missing flag on embeddings` |
+| Flag closed without a fix, parked or proposed | No commit (flags are private) |
 | `AGENTS.md` / `README.md` | `docs(schema): …`, `docs(readme): …` |
 | Config (`.claude/`, `.obsidian/`, `.gitignore`) | `chore(config): …` |
 | Procedure flag applied (staging) | `docs(schema): resolve procedure flag on gitignore comments` |
