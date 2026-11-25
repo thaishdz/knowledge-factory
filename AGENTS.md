@@ -34,7 +34,6 @@ learner/        How the human learns. Private: only README.md is tracked
 wiki.config.md  Repo-specific settings (role, content language). Never synced
 framework.txt   Staging only: the files that make up the framework
 index.md        Catalog of every public wiki page
-log.md          One entry per commit, append-only
 videos.md       Suggested videos per article
 CLAUDE.md       Only imports this file. No rules there
 README.md       Onboarding for humans. Not part of the wiki
@@ -50,7 +49,8 @@ README.md       Onboarding for humans. Not part of the wiki
    page's open-questions section.
 4. If a new source contradicts a page, don't overwrite silently: record the
    contradiction and which source says what.
-5. `log.md` mirrors git: one entry per commit, nothing else.
+5. `git log` is the history: one commit per change, Conventional Commit
+   subjects; an optional one-line note goes in the commit body.
 6. Every page created, renamed or deleted is reflected in `index.md`.
 7. The agents make the commits, not the human.
 8. A source whose license doesn't allow redistribution is **link-only**:
@@ -128,7 +128,7 @@ quiz / review ─► mentor ─────────────┴─► lea
 |---|---|---|---|---|---|---|
 | Runs on | Any question | `lint` | `curate`; approved plans (ingest pages, artifact, video, qa page, promote) | `quiz`, `review` | Sources entering or being filed in `raw/` | Every input from the human: it orchestrates |
 | Looks at | Pages needed to answer | The whole wiki | Flags or the plan, and `raw/` | `wiki/`, `learner/` | The material and `raw/` | Agents' reports and their commits |
-| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `log.md`, `videos.md`, `flags/`; framework files for `procedure` flags and promote | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `log.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
+| Writes to | `flags/open/`, `learner/trace/` | `flags/open/` | `wiki/`, `artifacts/`, `index.md`, `videos.md`, `flags/`; framework files for `procedure` flags and promote | `learner/`, `flags/open/` | Copies and moves in `raw/`, `raw/SOURCES.md`, `.git/info/exclude` | `flags/open/` (procedure) only |
 | Commits | No | No | Yes | No | Yes | No |
 
 - The tutor answers the human's questions; the mentor quizzes them and
@@ -182,7 +182,7 @@ mechanical filing go to Haiku; writing goes to Sonnet:
    Glob/Grep.
 3. `raw/`: source of truth. The tutor never answers from it (that's a
    `missing` flag); the curator uses it to fix the wiki.
-4. `log.md`, `git log` and each page's `updated`: what changed and when.
+4. `git log` and each page's `updated`: what changed and when.
 5. `videos.md`: never a source for claims.
 
 ### Flags
@@ -206,7 +206,7 @@ Short description of the gap or problem.
 - Types: `missing` (the wiki lacks something), `contradiction` (pages, or a
   page and its source, disagree), `stale` (superseded claim, or artifact
   older than its pages), `broken-link`, `orphan` (page without incoming
-  links, or unembedded diagram), `structure` (index, log, frontmatter,
+  links, or unembedded diagram), `structure` (index, frontmatter,
   `videos.md` or framework don't match), `procedure` (the human corrected
   how the agents work; see below).
 - States: `open` (no commit until the curator processes it),
@@ -238,14 +238,14 @@ that don't generalize aren't flagged.
   folders' `.gitkeep`) is tracked.
 - Even so, a flag describes the wiki's gap and never quotes the human's
   question, says what they asked, or names a `wiki/qa/` page: its content
-  feeds wiki fixes, commit messages and `log.md`.
+  feeds wiki fixes, and commit messages.
 
 ### Learner store
 
 `learner/` holds how the human learns, compiled like `raw/` → `wiki/`.
 
 **Privacy.** Everything in it except `README.md` is in `.gitignore`: it
-never goes into a commit, `log.md`, a wiki page, an artifact, a flag or an
+never goes into a commit, a wiki page, an artifact, a flag or an
 external service. Never `git add -f` it.
 
 **`trace/YYYY-MM.md`** (L1). Append-only. One entry per event:
@@ -291,7 +291,7 @@ flashcards (see "Quiz").
 one. Same page conventions (`type: qa`, sources from `raw/`, nothing made
 up), but private because they reveal what the human asks:
 
-- Only `README.md` is tracked: no commit, no `log.md` entry, not in
+- Only `README.md` is tracked: no commit, not in
   `index.md`. Public pages don't link to them; they may link to public pages.
 - The mentor proposes one when the trace shows the same question or gap at
   least twice; if the human accepts, the main session has the curator
@@ -314,7 +314,7 @@ Each repo says its `role` in `wiki.config.md`:
 Changes flow one way, staging → prod. In a prod repo, never edit a framework
 file directly: make the change in staging (add it to the session's working
 directories if needed), commit it there, then promote. Everything not listed
-in `framework.txt` (wiki content, `raw/`, `index.md`, `log.md`,
+in `framework.txt` (wiki content, `raw/`, `index.md`,
 `videos.md`, flags, `README.md`, `wiki.config.md`, licenses) belongs to each
 repo and is never synced.
 
@@ -360,7 +360,8 @@ asking, and only stops if something blocks the whole topic.
    archivist copies it unchanged into the root of `raw/`; a URL can't be saved as-is, so ask the
    human to save it in `raw/` (e.g. with Obsidian's web clipper). Then use
    `Explore` to find the sources in `raw/` on the topic, which of them have
-   no ingest in `log.md`, and what `index.md` and `wiki/` already cover.
+   no ingest commit in `git log` (e.g. `git log --oneline --grep ingest`),
+   and what `index.md` and `wiki/` already cover.
    If `raw/` has nothing on the topic and the wiki doesn't cover it, say
    which kind of source would be needed and stop.
 2. **Plan (the only approval).** Show in a few lines: the sources to ingest
@@ -394,7 +395,8 @@ the final report instead of a question.
 
 1. Find files in `raw/` (root and category folders, not `assets/`) whose
    name contains `<name>`, case-insensitive. One: say which. Several: ask.
-   None: say so and list the sources without an ingest in `log.md`.
+   None: say so and list the sources with no ingest commit in `git log`
+   (e.g. `git log --oneline --grep ingest`).
 2. If it's in the root of `raw/`, ask its category (`article`, `paper`,
    `repo`), suggesting the likeliest. If it's already in a category folder,
    don't ask. The archivist files it, makes sure `raw/SOURCES.md` lists it
@@ -410,7 +412,7 @@ the final report instead of a question.
 6. Delegate to the curator, passing the approved summary as its plan:
    create the new pages the source justifies; update affected pages (info,
    `sources`, `updated`); add cross-links both ways; update `index.md`;
-   run the checks and commit with the `log.md` entry.
+   run the checks and commit.
 7. Review the commit (`git show`) and send any fix back to the curator.
 
 ### Video
@@ -529,7 +531,6 @@ duplicates), then a report grouped by type. It checks:
 - Pages missing from `index.md` or index entries without a page
   (`wiki/qa/` is never indexed); public pages linking to `wiki/qa/`
 - Pages without `sources`; sources missing from `raw/SOURCES.md`
-- `log.md` out of sync with `git log`
 - `videos.md` entries whose article no longer exists
 - Artifacts whose pages have an `updated` later than the artifact's last
   commit (`git log -1 --format=%cs -- artifacts/<topic>.html`)
@@ -539,7 +540,7 @@ duplicates), then a report grouped by type. It checks:
 
 Done by the curator: `curate` (every `open` flag) or `curate <name>` (one
 flag, any state). One flag = one fix. A fix that changes tracked files is
-one commit with one `log.md` entry; closing, parking or proposing without
+one commit; closing, parking or proposing without
 changing tracked files makes no commit (flags are private).
 
 1. Read the flag (including any `suggestion:`), the affected page and
@@ -640,9 +641,8 @@ curator copies and commits.
    (new, changed and removed files). If nothing differs, say so and stop.
 3. Wait for approval. Then the curator copies the files, keeping
    executable bits, and commits.
-4. The commit is `chore(config): promote framework from staging @<hash>` with its
-   `log.md` entry (type `config`, `notes:` the staging commit subjects since
-   the last promote).
+4. The commit is `chore(config): promote framework from staging @<hash>` with the
+   staging commit subjects since the last promote in the commit body.
 
 ## index.md format
 
@@ -668,37 +668,12 @@ optional:
 - [Video title](https://...) — channel, duration
 ```
 
-## log.md format
-
-The readable mirror of `git log`: each commit carries its own new entry,
-whose title is the commit subject verbatim. Nothing else goes in (no
-decisions or conversations; operations without commits write nothing).
-Append-only; a revert is a new commit with its own entry.
-
-```markdown
-## [2026-11-13] ingest | docs(wiki): ingest karpathy llm wiki gist
-- agent: agent name and model, e.g. curator (Claude Opus 5.5)
-- files: wiki/topics/a.md, index.md       # without log.md; summarize if >10
-- notes: optional, one line, max 200 characters
-```
-
-Types: `ingest`, `video`, `artifact`, `query`, `lint` (older entries only;
-lint fixes use `curate`), `curate`, `schema`, `config`. Keep the
-`## [date] type |` prefix exact for grep. In sync when these match:
-
-```bash
-git log --oneline | wc -l
-grep -c "^## \[" log.md
-```
-
-Use `tail` or `grep` on `log.md`; don't read it whole.
-
 ## Privacy
 
 - Never send the human's personal email to an external service (`User-Agent`,
   `mailto=`/`email=` parameters, forms, search text). Use a generic
   `User-Agent`. If a service requires an email, stop and ask.
-- Never write their email in wiki pages, `log.md` or commit messages.
+- Never write their email in wiki pages or commit messages.
   Public repos commit with the GitHub `noreply` address.
 - Nothing from `learner/` or `wiki/qa/` leaves the machine: not in
   searches, commits, artifacts or flags.
@@ -739,4 +714,4 @@ session doesn't commit.
 
 If a convention isn't working, propose the change; don't edit this file on
 your own. In a prod repo, accepted changes are made in staging and promoted.
-Each accepted change is logged with type `schema`.
+Each accepted change is committed as `docs(schema): …`.
