@@ -1,5 +1,5 @@
 #!/bin/bash
-# PostToolUse hook (AskUserQuestion): remember the conversation language in .claude/.language.
+# PostToolUse hook (AskUserQuestion): remember the conversation language in .claude/user-prefs.json.
 # Looks for the answer to the 'Idioma / Language?' question anywhere in the hook input.
 # Defensive: if not found, does nothing. Never blocks: always exit 0.
 input=$(cat 2>/dev/null)
@@ -18,6 +18,7 @@ case "$ans" in
   English*) l=en ;;
   *) exit 0 ;;
 esac
-mkdir -p .claude 2>/dev/null
-printf '%s\n' "$l" > .claude/.language 2>/dev/null
+. "$(dirname "$0")/prefs.sh"
+prefs_migrate
+prefs_set language "\"$l\""
 exit 0

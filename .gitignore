@@ -1,8 +1,7 @@
 .DS_Store
 .obsidian/
 .claude/settings.local.json
-.claude/.onboarded
-.claude/.language
+.claude/user-prefs.json
 learner/*
 !learner/README.md
 wiki/qa/*
