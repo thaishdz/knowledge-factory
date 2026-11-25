@@ -75,7 +75,8 @@ wiki and its graph.
 1. Click **Use this template** on GitHub (make the copy private if you
    need to). It then evolves on its own: there is no sync with the template.
 2. Clone your copy and run `claude` in it.
-3. Claude welcomes you and guides you: explore the sample content first, or
+3. A welcome appears when Claude opens; write anything to start (e.g. "hello")
+   and Claude guides you: explore the sample content first, or
    start your own wiki. The reset asks for the language and titles, so you
    never edit `wiki.config.md` by hand. Then say what you want to learn, e.g.
    "I want to learn RAG"; you approve one plan and Claude runs every agent.
